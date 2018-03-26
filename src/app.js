@@ -22,6 +22,7 @@ import { makeCoreContext } from './util/makeContext.js'
 const store: {} = configureStore({})
 
 const perfTimers = {}
+const perfTotals = {}
 const perfCounters = {}
 
 console.log('***********************')
@@ -81,8 +82,14 @@ global.pend = function (label: string) {
   // $FlowFixMe: suppressing this error until we can find a workaround
   if (typeof perfTimers[label] === 'number') {
     const elapsed = Date.now() - perfTimers[label]
-    clog('PTIMER: ' + label + ': ' + elapsed + 'ms')
     perfTimers[label] = undefined
+
+    if (typeof perfTotals[label] === 'number') {
+      perfTotals[label] += elapsed
+    } else {
+      perfTotals[label] = elapsed
+    }
+    clog('PTIMER: ' + label + ': ' + elapsed + 'ms total:' + perfTotals[label].toString())
   } else {
     clog('PTIMER Error: PTimer not started')
   }
