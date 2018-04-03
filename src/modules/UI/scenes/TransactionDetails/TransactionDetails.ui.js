@@ -211,6 +211,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     if (parseFloat(this.state.amountFiat)) {
       const amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
       const absoluteAmountFiatOneDecimal = bns.abs(amountFiatOneDecimal)
+      console.log(absoluteAmountFiatOneDecimal)
       amountFiat = bns.toFixed(absoluteAmountFiatOneDecimal, 2, 2)
     } else {
       amountFiat = '0.00'
