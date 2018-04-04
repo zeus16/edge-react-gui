@@ -86,10 +86,12 @@ global.pend = function (label: string) {
 
     if (typeof perfTotals[label] === 'number') {
       perfTotals[label] += elapsed
+      perfCounters[label] += 1
     } else {
       perfTotals[label] = elapsed
+      perfCounters[label] = 0
     }
-    clog('PTIMER: ' + label + ': ' + elapsed + 'ms total:' + perfTotals[label].toString())
+    clog('PTIMER: ' + label + ': ' + elapsed + 'ms total:' + perfTotals[label].toString() + ' count:' + perfCounters[label].toString())
   } else {
     clog('PTIMER Error: PTimer not started')
   }
