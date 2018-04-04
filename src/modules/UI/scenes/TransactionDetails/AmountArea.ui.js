@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
-// import { intl } from '../../../../locales/intl.js'
+import { intl } from '../../../../locales/intl.js'
 import * as UTILS from '../../../utils'
 import { PrimaryButton } from '../../components/Buttons'
 import FormattedText from '../../components/FormattedText'
@@ -150,7 +150,7 @@ class AmountArea extends Component {
               style={[styles.editableFiat, UTILS.inputBottomPadding()]}
               keyboardType="numeric"
               placeholder={''}
-              value={UTILS.truncateDecimals(this.props.fiatAmount.toString().replace('-', ''), 2, true)}
+              value={intl.truncateDecimals(this.props.fiatAmount.toString().replace('-', ''), 2, true)}
               defaultValue={''}
               onBlur={this.props.onBlurFiatFxn}
               blurOnSubmit={true}

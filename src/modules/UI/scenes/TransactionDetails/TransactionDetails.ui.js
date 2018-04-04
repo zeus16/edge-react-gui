@@ -10,6 +10,7 @@ import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import type { GuiContact, GuiWallet } from '../../../../types.js'
+import { intl } from '../../../../locales/intl.js'
 import * as UTILS from '../../../utils'
 import FormattedText from '../../components/FormattedText/index'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -102,6 +103,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
         const initial = props.edgeTransaction.metadata.amountFiat.toFixed(2)
         amountFiat = bns.abs(initial)
         amountFiat = bns.toFixed(amountFiat, 2, 2)
+        amountFiat = intl.formatNumber(amountFiat)
       }
     }
 
@@ -205,20 +207,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onBlurFiat = () => {
-    // needs badly to be flowed and / or research best practices for converting TextInput to float / fiat
-    // keep in mind that TextField returns a string, and amountFiat will need to be a floating point number
-    let amountFiat
-    if (parseFloat(this.state.amountFiat)) {
-      const amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
-      const absoluteAmountFiatOneDecimal = bns.abs(amountFiatOneDecimal)
-      console.log(absoluteAmountFiatOneDecimal)
-      amountFiat = bns.toFixed(absoluteAmountFiatOneDecimal, 2, 2)
-    } else {
-      amountFiat = '0.00'
-    }
-    this.setState({
-      amountFiat
-    })
+    this.setState({amountFiat: intl.truncateDecimals(intl.prettifyNumber(this.state.amountFiat), 2)})
   }
 
   onChangeCategory = (input: string) => {
@@ -365,7 +354,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
     const { name, notes, bizId, miscJson } = this.state
     const txid = this.props.edgeTransaction.txid
-    const newAmountFiat = this.state.amountFiat
+    const newAmountFiat = intl.formatToNativeNumber(this.state.amountFiat)
     const amountFiat: number = !newAmountFiat ? 0.0 : Number.parseFloat(newAmountFiat)
     const edgeMetadata: EdgeMetadata = { name, category, notes, amountFiat, bizId, miscJson }
     this.props.setTransactionDetails(txid, this.props.edgeTransaction.currencyCode, edgeMetadata)
