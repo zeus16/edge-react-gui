@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import type { EdgeTokenInfo, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableHighlight, View } from 'react-native'
@@ -58,6 +59,11 @@ const ADDRESS_TEXT = s.strings.fragment_send_address
 const FLASH_TEXT = s.strings.fragment_send_flash
 
 export default class Scan extends Component<Props> {
+  constructor (props: Props) {
+    super(props)
+    slowlog(this, /.*/)
+  }
+
   render () {
     return (
       <SafeAreaView>
