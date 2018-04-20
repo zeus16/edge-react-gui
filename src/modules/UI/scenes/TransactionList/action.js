@@ -1,10 +1,11 @@
 // @flow
 
 import type { EdgeTransaction } from 'edge-core-js'
+
+import type { TransactionListTx } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
-import type { TransactionListTx } from '../../../../types.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as UTILS from '../../../utils'
 import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
@@ -33,24 +34,26 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   if (wallet) {
-    WALLET_API.getTransactions(wallet, currencyCode, options).then(transactions => {
-      let key = -1
-      const transactionsWithKeys = transactions.map((tx) => {
-        const txDate = new Date(tx.date * 1000)
-        const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-        const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-        key++
-        return {
-          ...tx,
-          dateString,
-          time,
-          key
-        }
+    WALLET_API.getTransactions(wallet, currencyCode, options)
+      .then(transactions => {
+        let key = -1
+        const transactionsWithKeys = transactions.map(tx => {
+          const txDate = new Date(tx.date * 1000)
+          const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+          const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
+          key++
+          return {
+            ...tx,
+            dateString,
+            time,
+            key
+          }
+        })
+        dispatch(updateTransactions(transactionsWithKeys))
       })
-      dispatch(updateTransactions(transactionsWithKeys))
-    }).catch((e) => {
-      console.warn('Issue with getTransactions: ', e.message)
-    })
+      .catch(e => {
+        console.warn('Issue with getTransactions: ', e.message)
+      })
   }
 }
 

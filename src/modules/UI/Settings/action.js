@@ -1,6 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyPlugin } from 'edge-core-js'
+
 import type { CustomTokenInfo, GuiTouchIdInfo } from '../../../types.js'
 const PREFIX = 'UI/Settings/'
 
