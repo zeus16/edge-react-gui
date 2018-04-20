@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 
 import type { State } from '../../../../ReduxTypes'
 import * as UI_SELECTORS from '../../../selectors'
-import { WalletName } from './WalletName.ui.js'
 import type { Props } from './WalletName.ui'
+import { WalletName } from './WalletName.ui.js'
 
 const mapStateToProps = (state: State): Props => {
   return {
