@@ -1,12 +1,10 @@
 // @flow
 
 import slowlog from 'react-native-slowlog'
-import type { EdgeTokenInfo, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeTokenInfo } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableHighlight, View } from 'react-native'
 import Camera from 'react-native-camera'
-import type { GuiWallet } from '../../../../types'
-
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import { Actions } from 'react-native-router-flux'
@@ -15,6 +13,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
+import type { GuiWallet } from '../../../../types'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type { PermissionStatus } from '../../../ReduxTypes'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
@@ -47,7 +46,7 @@ type Props = {
   updateParsedURI(EdgeParsedUri): void,
   loginWithEdge(string): void,
   toggleScanToWalletListModal: () => void,
-  routeToAddToken: (EdgeTokenInfo) => void
+  routeToAddToken: EdgeTokenInfo => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -139,7 +138,8 @@ export default class Scan extends Component<Props> {
         return
       }
       const parsedURI = WALLET_API.parseURI(this.props.edgeWallet, uri)
-      if (parsedURI.token) { // token URI, not pay
+      if (parsedURI.token) {
+        // token URI, not pay
         const { contractAddress, currencyName, multiplier } = parsedURI.token
         const currencyCode = parsedURI.token.currencyCode.toUpperCase()
         const wallet = this.props.guiWallet
@@ -159,7 +159,8 @@ export default class Scan extends Component<Props> {
           onAddToken: UTILS.noOp
         }
         Actions.addToken(parameters)
-      } else { // assume pay URI
+      } else {
+        // assume pay URI
         this.props.updateParsedURI(parsedURI)
         Actions.sendConfirmation('fromScan')
       }
