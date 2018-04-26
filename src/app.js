@@ -54,51 +54,60 @@ if (ENV.LOG_SERVER) {
 
 const clog = console.log
 
-const PERF_LOGGING_ONLY = false
+const PERF_LOGGING_ONLY = true
+const ENABLE_PERF_LOGGING = true
 
 if (PERF_LOGGING_ONLY) {
   // $FlowFixMe: suppressing this error until we can find a workaround
   console.log = () => {}
 }
 
-// $FlowFixMe: suppressing this error until we can find a workaround
-global.pnow = function (label: string) {
-  clog('PTIMER PNOW: ' + label + ':' + Date.now())
-}
-
-// $FlowFixMe: suppressing this error until we can find a workaround
-global.pstart = function (label: string) {
+if (ENABLE_PERF_LOGGING) {
   // $FlowFixMe: suppressing this error until we can find a workaround
-  if (typeof perfTimers[label] === 'undefined') {
-    perfTimers[label] = Date.now()
-  } else {
-    clog('PTIMER Error: PTimer already started')
+  global.pnow = function (label: string) {
+    clog('PTIMER PNOW: ' + label + ':' + Date.now())
   }
-}
 
-// $FlowFixMe: suppressing this error until we can find a workaround
-global.pend = function (label: string) {
   // $FlowFixMe: suppressing this error until we can find a workaround
-  if (typeof perfTimers[label] === 'number') {
-    const elapsed = Date.now() - perfTimers[label]
-    clog('PTIMER: ' + label + ': ' + elapsed + 'ms')
-    perfTimers[label] = undefined
-  } else {
-    clog('PTIMER Error: PTimer not started')
-  }
-}
-
-// $FlowFixMe: suppressing this error until we can find a workaround
-global.pcount = function (label: string) {
-  // $FlowFixMe: suppressing this error until we can find a workaround
-  if (typeof perfCounters[label] === 'undefined') {
-    perfCounters[label] = 1
-  } else {
-    perfCounters[label] = perfCounters[label] + 1
-    if (perfCounters[label] % 10 === 0) {
-      clog('PTIMER PCOUNT: ' + label + ': ' + perfCounters[label])
+  global.pstart = function (label: string) {
+    // $FlowFixMe: suppressing this error until we can find a workaround
+    if (typeof perfTimers[label] === 'undefined') {
+      perfTimers[label] = Date.now()
+    } else {
+      clog('PTIMER Error: PTimer already started')
     }
   }
+
+  // $FlowFixMe: suppressing this error until we can find a workaround
+  global.pend = function (label: string) {
+    // $FlowFixMe: suppressing this error until we can find a workaround
+    if (typeof perfTimers[label] === 'number') {
+      const elapsed = Date.now() - perfTimers[label]
+      clog('PTIMER: ' + label + ': ' + elapsed + 'ms')
+      perfTimers[label] = undefined
+    } else {
+      clog('PTIMER Error: PTimer not started')
+    }
+  }
+
+  // $FlowFixMe: suppressing this error until we can find a workaround
+  global.pcount = function (label: string) {
+    // $FlowFixMe: suppressing this error until we can find a workaround
+    if (typeof perfCounters[label] === 'undefined') {
+      perfCounters[label] = 1
+    } else {
+      perfCounters[label] = perfCounters[label] + 1
+      if (perfCounters[label] % 10 === 0) {
+        clog('PTIMER PCOUNT: ' + label + ': ' + perfCounters[label])
+      }
+    }
+  }
+} else {
+  // $FlowFixMe: suppressing this error until we can find a workaround
+  global.pnow = () => {}
+  global.pstart = () => {}
+  global.pend = () => {}
+  global.pcount = () => {}
 }
 
 BackgroundTask.define(async () => {

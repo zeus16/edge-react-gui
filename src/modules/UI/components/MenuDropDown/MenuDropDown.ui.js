@@ -1,4 +1,5 @@
 // @flow
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
@@ -31,6 +32,7 @@ class MenuDropDown extends Component<Props, State> {
       height: 0,
       pageY: 0
     }
+    slowlog(this, /.*/)
   }
 
   renderMenuOptions (style: any) {

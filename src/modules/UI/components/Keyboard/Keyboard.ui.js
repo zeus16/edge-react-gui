@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { TextInput, View } from 'react-native'
 
@@ -13,6 +14,7 @@ export default class Keyboard extends Component {
     this.state = {
       displayValue: '0'
     }
+    slowlog(this, /.*/)
   }
 
   inputDigit = value => {

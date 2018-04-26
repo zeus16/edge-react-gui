@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { Animated } from 'react-native'
 
@@ -9,6 +10,7 @@ export default class Fade extends Component {
     this.state = {
       visible: props.visible
     }
+    slowlog(this, /.*/)
   }
 
   componentWillMount () {
