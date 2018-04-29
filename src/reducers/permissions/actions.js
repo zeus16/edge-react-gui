@@ -6,9 +6,15 @@ import { request } from '../../modules/UI/permissions.js'
 
 export const PREFIX = 'PERMISSIONS/'
 
-export const requestPermission = (permission: Permission) => (dispatch: Dispatch) => {
+export const requestPermission = (permission: Permission) => (dispatch: Dispatch, getState: any) => {
+  const state = getState()
+  if (state.permissions[permission] === 'authorized') {
+    return
+  }
   return request(permission).then(status => {
+    global.pstart('requestPermission:updatePermissions')
     dispatch(updatePermissions({ [permission]: status }))
+    global.pend('requestPermission:updatePermissions')
   })
 }
 
