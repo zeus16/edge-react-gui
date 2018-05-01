@@ -93,7 +93,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       toExchangeAmount: ''
     }
     this.state = newState
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
   componentWillMount () {
     this.props.getShapeShiftTokens()

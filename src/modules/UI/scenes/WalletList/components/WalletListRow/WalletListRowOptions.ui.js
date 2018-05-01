@@ -26,7 +26,7 @@ export default class WalletListRowOptions extends Component<Props> {
         this.options.push(temp)
       }
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   optionAction = (optionKey: string) => {

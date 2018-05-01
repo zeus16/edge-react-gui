@@ -66,7 +66,7 @@ type Props = {
 export default class WalletList extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
       sortableMode: false,
       sortableListOpacity: new Animated.Value(0),

@@ -42,7 +42,7 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
     this.state = {
       feeSetting: props.feeSetting
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillUnmount () {

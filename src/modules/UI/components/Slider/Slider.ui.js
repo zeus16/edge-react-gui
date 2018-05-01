@@ -36,7 +36,7 @@ export default class ABSlider extends Component<Props, State> {
       sliderDisabled: props.sliderDisabled,
       onSlidingComplete: props.onSlidingComplete
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   onSlidingComplete = (value: number) => {

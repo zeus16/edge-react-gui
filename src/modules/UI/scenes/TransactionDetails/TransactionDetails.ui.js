@@ -140,7 +140,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
         symbol: ''
       }
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   onFocusPayee = () => {

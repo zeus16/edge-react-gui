@@ -116,7 +116,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
   constructor (props: Props) {
     super(props)
     this.state = getInitialState(props)
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
   componentWillMount () {
     this.animatedValue = new Animated.Value(0)

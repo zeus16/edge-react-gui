@@ -38,7 +38,7 @@ export default class CustomFeesModal extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {}
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillMount = () => {

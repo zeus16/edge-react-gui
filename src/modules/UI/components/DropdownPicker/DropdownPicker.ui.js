@@ -17,7 +17,7 @@ export default class DropdownPicker extends Component {
       isListVisible: props.startOpen,
       selectedItem: ''
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   handleSelectListItem = item => {

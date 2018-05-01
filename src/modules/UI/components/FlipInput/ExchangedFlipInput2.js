@@ -111,7 +111,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = propsToState(props)
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillReceiveProps (nextProps: Props) {

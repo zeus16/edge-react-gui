@@ -14,7 +14,7 @@ export default class Keyboard extends Component {
     this.state = {
       displayValue: '0'
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   inputDigit = value => {

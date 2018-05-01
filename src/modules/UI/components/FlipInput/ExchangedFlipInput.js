@@ -64,7 +64,7 @@ export default class ExchangedFlipInput extends Component<Props, State> {
       secondaryDisplayAmount: '',
       nativeAmount: props.primaryInfo.nativeAmount ? props.primaryInfo.nativeAmount : ''
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillReceiveProps (nextProps: Props) {

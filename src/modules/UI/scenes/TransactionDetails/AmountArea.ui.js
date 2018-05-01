@@ -45,7 +45,7 @@ class AmountArea extends Component {
       pickerFontSize: 22
     })
     this.Picker = Picker
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   handleClick = () => {

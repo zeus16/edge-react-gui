@@ -165,7 +165,7 @@ export default class Main extends Component<Props, State> {
 
   constructor (props: Props) {
     super(props)
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
 
     this.state = {
       context: undefined

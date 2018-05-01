@@ -32,7 +32,7 @@ class MenuDropDown extends Component<Props, State> {
       height: 0,
       pageY: 0
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   renderMenuOptions (style: StyleSheet.Styles) {

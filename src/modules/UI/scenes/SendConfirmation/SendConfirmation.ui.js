@@ -72,7 +72,7 @@ type State = {
 export class SendConfirmation extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
     const newState: State = {
       secondaryDisplayDenomination: {
         name: '',

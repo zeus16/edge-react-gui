@@ -49,7 +49,7 @@ const FLASH_TEXT = s.strings.fragment_send_flash
 export default class Scan extends Component<Props> {
   constructor (props: Props) {
     super(props)
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   render () {

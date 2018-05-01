@@ -20,7 +20,7 @@ class PrimaryButton extends Component {
         this.style.push(props.style)
       }
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
   onPress = () => {
     if (!this.props.processingFlag) {

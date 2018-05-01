@@ -70,7 +70,7 @@ export class Request extends Component<Props, State> {
       encodedURI: '',
       result: ''
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillReceiveProps (nextProps: Props) {

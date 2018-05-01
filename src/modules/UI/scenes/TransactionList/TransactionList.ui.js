@@ -90,7 +90,7 @@ export default class TransactionList extends Component<Props, State> {
 
   constructor (props: Props) {
     super(props)
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillMount () {

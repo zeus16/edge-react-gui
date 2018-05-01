@@ -10,7 +10,7 @@ export default class Fade extends Component {
     this.state = {
       visible: props.visible
     }
-    slowlog(this, /.*/)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillMount () {
