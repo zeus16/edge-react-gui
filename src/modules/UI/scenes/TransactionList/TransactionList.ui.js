@@ -354,7 +354,7 @@ export default class TransactionList extends Component<Props, State> {
   }
 
   isSentTransaction (tx: TransactionListTx) {
-    return (tx.nativeAmount.charAt(0) === '-')
+    return (tx.nativeAmount && (tx.nativeAmount.charAt(0) === '-'))
   }
 
   renderTx = (transaction: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
