@@ -1,6 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
+import slowlog from 'react-native-slowlog'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
@@ -90,6 +91,11 @@ export class TransactionList extends Component<Props, State> {
     currentCurrencyCode: '',
     numTransactions: 0,
     currentWalletId: ''
+  }
+
+  constructor (props: Props) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillMount () {
