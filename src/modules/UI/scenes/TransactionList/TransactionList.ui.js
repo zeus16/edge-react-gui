@@ -26,8 +26,8 @@ import styles, { styles as styleRaw } from './style'
 import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
 
 // import SearchBar from './components/SearchBar.ui'
-const INITIAL_TRANSACTION_BATCH_NUMBER = 10
-const SCROLL_THRESHOLD = 0.5
+const INITIAL_TRANSACTION_BATCH_NUMBER = 20
+const SCROLL_THRESHOLD = 0.75
 
 export type StateProps = {
   loading: boolean,
@@ -51,7 +51,6 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  updateExchangeRates: () => any,
   fetchMoreTransactions: (walletId: string, currencyCode: string) => any
 }
 
@@ -99,13 +98,12 @@ export class TransactionList extends Component<Props, State> {
   }
 
   componentWillMount () {
-    this.props.updateExchangeRates()
-    this.handleScrollEnd()
+    // this.handleScrollEnd()
   }
 
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
-      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedWalletId)
+      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
     }
   }
 
