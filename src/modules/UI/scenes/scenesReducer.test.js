@@ -96,6 +96,7 @@ test('initialState', () => {
     transactionList: {
       searchVisible: false,
       transactions: [],
+      transactionSections: [],
       transactionsWalletListModalVisibility: false,
       updatingBalance: true,
       loadingTransactions: false,

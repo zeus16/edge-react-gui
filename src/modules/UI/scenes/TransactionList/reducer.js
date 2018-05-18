@@ -6,6 +6,7 @@ import { combineReducers } from 'redux'
 import type { Action } from '../../../ReduxTypes.js'
 import * as WALLET_ACTION from '../../Wallets/action.js'
 import * as ACTION from './action'
+import type { TransactionSections } from '../../../../types'
 
 export type TransactionsState = Array<EdgeTransaction>
 
@@ -14,6 +15,18 @@ const transactions = (state: TransactionsState = [], action: Action) => {
   switch (action.type) {
     case ACTION.UPDATE_TRANSACTIONS:
       return action.data.transactions
+    case WALLET_ACTION.SELECT_WALLET:
+      return []
+    default:
+      return state
+  }
+}
+
+const transactionSections = (state: TransactionSections = [], action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.transactionSections
     case WALLET_ACTION.SELECT_WALLET:
       return []
     default:
@@ -106,6 +119,7 @@ const loadingTransactions = (state = false, action) => {
 
 export const transactionList = combineReducers({
   transactions,
+  transactionSections,
   currentCurrencyCode,
   currentWalletId,
   numTransactions,

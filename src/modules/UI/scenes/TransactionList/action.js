@@ -2,7 +2,7 @@
 
 import type { EdgeTransaction } from 'edge-core-js'
 
-import type { TransactionListTx } from '../../../../types.js'
+import type { TransactionListTx, TransactionSection, TransactionSections } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type { Dispatch, GetState, State } from '../../../ReduxTypes'
@@ -89,12 +89,20 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   })
 }
 
+const getDateAsNumber = (date: Date) => {
+  const year = date.getFullYear() * 10000
+  const month = (date.getMonth() + 1) * 100
+  const day = date.getDate()
+  return year + month + day
+}
+
 const getAndMergeTransactions = (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   const currentEndIndex = options.startIndex + options.startEntries - 1
   if (wallet) {
     // initialize the master array of transactions that will eventually go into Redux
-    let transactionsWithKeys = []
+    let transactionsWithKeys: Array<TransactionListTx> = []
+    let transactionSections: TransactionSections = []
     // assume counter starts at zero (eg this is the first fetch)
     let key = 0
     // if there are any options and the starting index is non-zero (eg this is a subsequent fetch)
@@ -103,25 +111,54 @@ const getAndMergeTransactions = (state: State, dispatch: Dispatch, walletId: str
       transactionsWithKeys = transactionsWithKeys.concat(state.ui.scenes.transactionList.transactions)
       // and fast forward the counter
       key = transactionsWithKeys.length
+      transactionSections = transactionSections.concat(state.ui.scenes.transactionList.transactionSections)
     }
     const numTransactions = WALLET_API.getNumTransactions(wallet, currencyCode)
     WALLET_API.getTransactions(wallet, currencyCode, options)
       .then(transactions => {
+        let lastDate = 0
+        let currentSection: TransactionSection | null = null
+        const lastTxDate = transactionsWithKeys[key - 1].date
+        if (key > 0 && lastTxDate) {
+          const d = new Date(lastTxDate * 1000)
+          lastDate = getDateAsNumber(d)
+        }
+        if (transactionSections.length > 0) {
+          currentSection = transactionSections[transactionSections.length - 1]
+        }
         for (const tx of transactions) {
           const txDate = new Date(tx.date * 1000)
+          const txDateNum = getDateAsNumber(txDate)
           const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
           const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-          transactionsWithKeys.push({
+          if (txDateNum !== lastDate) {
+            // We have a new section
+            const txSection: TransactionSection = {
+              dateString,
+              data: []
+            }
+            transactionSections.push(txSection)
+            currentSection = txSection
+            lastDate = txDateNum
+          }
+          const txListTx: TransactionListTx = {
             ...tx,
-            dateString,
             time,
-            key
-          })
+            key: key + 1000
+          }
+          if (currentSection) {
+            currentSection.data.push(txListTx)
+          } else {
+            console.log('Error: Missing section for txs')
+          }
+          transactionsWithKeys.push(txListTx)
           key++
         }
+
         dispatch(updateTransactions({
           numTransactions,
           transactions: transactionsWithKeys,
+          transactionSections,
           currentCurrencyCode: currencyCode,
           currentWalletId: walletId,
           currentEndIndex
@@ -178,6 +215,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
 export const updateTransactions = (transactionUpdate: {
   numTransactions: number,
   transactions: Array<TransactionListTx>,
+  transactionSections: TransactionSections,
   currentCurrencyCode: string,
   currentWalletId: string,
   currentEndIndex: number

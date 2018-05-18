@@ -30,6 +30,7 @@ const mapStateToProps = (state: State) => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
 
   const transactions = UI_SELECTORS.getTransactions(state)
+  const transactionSections = state.ui.scenes.transactionList.transactionSections
 
   const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
   const denominationsOnWallet = wallet.allDenominations[currencyCode]
@@ -58,6 +59,7 @@ const mapStateToProps = (state: State) => {
     displayDenomination,
     updatingBalance: false,
     transactions,
+    transactionSections,
     // searchVisible: state.ui.scenes.transactionList.searchVisible,
     contactsList: state.ui.scenes.transactionList.contactsList,
     selectedWalletId,

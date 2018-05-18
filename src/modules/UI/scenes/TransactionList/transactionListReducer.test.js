@@ -8,6 +8,7 @@ test('initialState', () => {
   const expected = {
     searchVisible: false,
     transactions: [],
+    transactionSections: [],
     transactionsWalletListModalVisibility: false,
     updatingBalance: true,
     loadingTransactions: false,

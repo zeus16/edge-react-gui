@@ -53,10 +53,9 @@ export class TransactionRow extends Component<Props, State> {
 
   render () {
     global.pcount('TransactionRow:render')
-    const completedTxList: Array<TransactionListTx> = this.props.transactions
     // $FlowFixMe
     const tx = this.props.transaction.item
-    let txColorStyle, lastOfDate, txImage, pendingTimeStyle, pendingTimeSyntax, transactionPartner
+    let txColorStyle, txImage, pendingTimeStyle, pendingTimeSyntax, transactionPartner
     let txName = ''
     let thumbnailPath = ''
 
@@ -89,13 +88,6 @@ export class TransactionRow extends Component<Props, State> {
       }
     }
 
-    if (completedTxList[tx.key + 1]) {
-      // is there a subsequent transaction?
-      lastOfDate = tx.dateString !== completedTxList[tx.key + 1].dateString
-    } else {
-      lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
-    }
-
     const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
     const amountString = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6))
@@ -124,17 +116,10 @@ export class TransactionRow extends Component<Props, State> {
 
     const out = (
       <View style={[styles.singleTransactionWrap]}>
-        {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
-          <View style={styles.singleDateArea}>
-            <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{tx.dateString}</T>
-            </View>
-          </View>
-        )}
         <TouchableHighlight
           onPress={() => this.props.onClick(tx, thumbnailPath)}
           underlayColor={styleRaw.transactionUnderlay.color}
-          style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}
+          style={styles.singleTransaction}
         >
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>

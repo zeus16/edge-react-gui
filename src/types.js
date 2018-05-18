@@ -76,10 +76,16 @@ export type GuiFiatType = {
 
 export type TransactionListTx = {
   ...EdgeTransaction,
-  dateString?: string,
   key: number,
   time: string
 }
+
+export type TransactionSection = {
+  dateString: string,
+  data: Array<TransactionListTx>
+}
+
+export type TransactionSections = Array<TransactionSection>
 
 export type FlatListItem = {
   key: number,

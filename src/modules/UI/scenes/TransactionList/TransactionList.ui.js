@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import slowlog from 'react-native-slowlog'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Animated, SectionList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 // import Contacts from 'react-native-contacts'
 // import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
@@ -14,7 +14,7 @@ import sendImage from '../../../../assets/images/transactions/transactions-send.
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-import type { GuiContact, GuiWallet, TransactionListTx } from '../../../../types'
+import type {GuiContact, GuiWallet, TransactionListTx, TransactionSections} from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
@@ -33,6 +33,7 @@ export type StateProps = {
   displayDenomination: EdgeDenomination,
   updatingBalance: boolean,
   transactions: Array<TransactionListTx>,
+  transactionSections: TransactionSections,
   contactsList: Array<GuiContact>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
@@ -181,7 +182,9 @@ export class TransactionList extends Component<Props, State> {
 
   _onCancel = () => this.setState({ width: 0 })
 
-  toggleShowBalance = () => this.setState({ showBalance: !this.state.showBalance })
+  toggleShowBalance = () => {
+    this.setState({ showBalance: !this.state.showBalance })
+  }
 
   renderDropUp = () => {
     if (this.props.showToWalletModal) {
@@ -191,7 +194,7 @@ export class TransactionList extends Component<Props, State> {
   }
 
   render () {
-    const txs = this.state.reset ? emptyArray : this.props.transactions
+    const transactionSections = this.state.reset ? emptyArray : this.props.transactionSections
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -199,11 +202,12 @@ export class TransactionList extends Component<Props, State> {
           <View style={styles.scrollView}>
             <View style={styles.container}>
               <View style={styles.transactionsWrap}>
-                <FlatList
+                <SectionList
                   ListHeaderComponent={this.renderBalanceBox}
                   style={styles.transactionsScrollWrap}
-                  data={txs}
+                  sections={transactionSections}
                   renderItem={this.renderTx}
+                  renderSectionHeader={this.renderSectionHeader}
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
                   onEndReached={this.handleScrollEnd}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
@@ -326,6 +330,17 @@ export class TransactionList extends Component<Props, State> {
 
   goToTxDetail = (edgeTransaction: EdgeTransaction, thumbnailPath: string) => {
     Actions.transactionDetails({ edgeTransaction, thumbnailPath })
+  }
+
+  renderSectionHeader = (section: Object) => {
+    const { dateString } = section.section
+    return (
+      <View style={styles.singleDateArea}>
+        <View style={styles.leftDateArea}>
+          <T style={styles.formattedDate}>{dateString}</T>
+        </View>
+      </View>
+    )
   }
 
   renderTx = (transaction: TransactionListTx) => {
