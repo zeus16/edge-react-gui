@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { Text } from 'react-native'
 import styles from './style'
 import { getObjectDiff } from '../../../utils.js'
+import { scaleFont } from '../../../../lib/scaleFont.js'
 
 export default class FormattedText extends Component {
   shouldComponentUpdate (nextProps) {
@@ -28,9 +29,13 @@ export default class FormattedText extends Component {
     this.refs['nativeForward'].setNativeProps(props)
   }
 
+  // Need to pass a fontSize props for custom fontSize
   render () {
+    getFontSize = () => {
+      return this.props.fontSize ? { fontSize: scaleFont(this.props.fontSize) } : null
+    }
     return (
-      <Text {...this.props} style={[this.style, this.props.style]} ref={'nativeForward'} allowFontScaling={false}>
+      <Text {...this.props} style={[this.style, this.props.style, getFontSize() ]} ref={'nativeForward'} allowFontScaling={false}>
         {this.props.children}
       </Text>
     )
