@@ -10,7 +10,9 @@ target 'edge' do
   pod 'Firebase/Messaging', '~> 5.3.0'
 
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
-   'BatchedBridge'
+    'RCTNetwork',
+    'DevSupport'
+#   'BatchedBridge'
   ]
 #  pod 'React', :path => '../node_modules/react-native'
   pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'

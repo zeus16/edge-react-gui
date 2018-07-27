@@ -37,23 +37,30 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.6.0)
-  - React (0.51.0):
-    - React/Core (= 0.51.0)
-  - React/BatchedBridge (0.51.0):
+  - React (0.55.3):
+    - React/Core (= 0.55.3)
+  - React/Core (0.55.3):
+    - yoga (= 0.55.3.React)
+  - React/DevSupport (0.55.3):
     - React/Core
-    - React/cxxreact_legacy
-  - React/Core (0.51.0):
-    - yoga (= 0.51.0.React)
-  - React/cxxreact_legacy (0.51.0):
-    - React/jschelpers_legacy
-  - React/jschelpers_legacy (0.51.0)
-  - yoga (0.51.0.React)
+    - React/RCTWebSocket
+  - React/fishhook (0.55.3)
+  - React/RCTBlob (0.55.3):
+    - React/Core
+  - React/RCTNetwork (0.55.3):
+    - React/Core
+  - React/RCTWebSocket (0.55.3):
+    - React/Core
+    - React/fishhook
+    - React/RCTBlob
+  - yoga (0.55.3.React)
 
 DEPENDENCIES:
   - BugsnagReactNative (from `../node_modules/bugsnag-react-native`)
   - Firebase/Core
   - Firebase/Messaging (~> 5.3.0)
-  - React/BatchedBridge (from `../node_modules/react-native`)
+  - React/DevSupport (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -85,9 +92,9 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
-  React: 541ba768b9855e10cdc76f55427a5cd0653ca806
-  yoga: 17521bbb0dd54a47c0b3ac43253e78cdac7488e0
+  React: aa2040dbb6f317b95314968021bd2888816e03d5
+  yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: be7f9f8b0d033f4b3a5f50a08fe3be3188c47ecd
+PODFILE CHECKSUM: 15017bb6d62e16ae9f28aae8946f5821df932fc1
 
 COCOAPODS: 1.5.3
