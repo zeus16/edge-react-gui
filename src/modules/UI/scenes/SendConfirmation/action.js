@@ -1,12 +1,13 @@
 // @flow
-
 import { bns } from 'biggystring'
 import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction, EdgeSpendInfo } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import * as StoreReview from 'react-native-store-review';
 
 import { OPEN_AB_ALERT, SEND_CONFIRMATION } from '../../../../constants/indexConstants'
-import { getAccount, getWallet } from '../../../Core/selectors.js'
+import { getAccount, getWallet, getCurrencyConverter } from '../../../Core/selectors.js'
+import { getSettings } from '../../Settings/selectors'
 import {
   broadcastTransaction,
   getMaxSpendable,
@@ -16,6 +17,8 @@ import {
   getPaymentProtocolInfo,
   makeSpendInfo
 } from '../../../Core/Wallets/api.js'
+import { convertNativeToExchange } from '../../../utils'
+import { intl } from '../../../../locales/intl'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
 import { openABAlert } from '../../components/ABAlert/action'
 import { getSelectedWalletId } from '../../selectors.js'
@@ -152,6 +155,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       title: 'Transaction Sent',
       message: 'Your transaction has been successfully sent.'
     }
+    reviewPopup(getState)
     dispatch(openABAlert(OPEN_AB_ALERT, successInfo))
   } catch (e) {
     dispatch(updateSpendPending(false))
@@ -202,4 +206,61 @@ export function IncorrectPinError (message: ?string = 'Incorrect Pin') {
   const error = new Error(message)
   error.name = errorNames.IncorrectPinError
   return error
+}
+
+const reviewPopup = (getState: getState) => {
+  const state = getState()
+  const wallets = state.ui.wallets.byId
+  const settings = getSettings(state)
+  const currencyConverter = getCurrencyConverter(state)
+
+  const totalBalance = () => {
+    let total = 0
+    const temporaryTotalCrypto = {}
+    // loop through each of the walletId's
+    for (const parentProp in wallets) {
+      // loop through all of the nativeBalances, which includes both parent currency and tokens
+      for (const currencyCode in wallets[parentProp].nativeBalances) {
+        // if there is no native balance for the currency / token then assume it's zero
+        if (!temporaryTotalCrypto[currencyCode]) {
+          temporaryTotalCrypto[currencyCode] = 0
+        }
+        // get the native balance for this currency
+        const nativeBalance = wallets[parentProp].nativeBalances[currencyCode]
+        // if it is a non-zero amount then we will process it
+        if (nativeBalance && nativeBalance !== '0') {
+          let denominations
+          // check to see if it's a currency first
+          if (settings[currencyCode]) {
+            // and if so then grab the default denomiation (setting)
+            denominations = settings[currencyCode].denominations
+          } else {
+            // otherwise find the token whose currencyCode matches the one that we are working with
+            const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
+            // grab the denominations array (which is equivalent of the denominations from the previous (true) clause)
+            denominations = tokenInfo.denominations
+          }
+          // now go through that array of denominations and find the one whose name matches the currency
+          const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+          // grab the multiplier, which is the ratio that we can multiply and divide by
+          const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+          // divide the native amount (eg satoshis) by the ratio to end up with standard crypto amount (which exchanges use)
+          const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+          temporaryTotalCrypto[currencyCode] = temporaryTotalCrypto[currencyCode] + cryptoAmount
+        }
+      }
+    }
+    for (const currency in temporaryTotalCrypto) {
+      const addValue = currencyConverter.convertCurrency(currency, 'iso:' + settings.defaultFiat, temporaryTotalCrypto[currency])
+      total = total + addValue
+    }
+    return total
+  }
+
+  if (totalBalance() > 150) {
+    if (StoreReview.isAvailable) {
+      StoreReview.requestReview();
+    }
+  }
+  return totalBalance()
 }
