@@ -48,6 +48,8 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
           enabledTokensOnWallet.forEach(customToken => {
             tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
           })
+        } else {
+          global.pnow && global.pnow(`UPDATE_WALLETS Loaded: ${tempWallet.id.slice(-6)} ${tempWallet.name.slice(0, 8)} ${tempWallet.currencyCode}`)
         }
         out[walletId] = {
           ...state[walletId],
@@ -161,7 +163,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     }
 
     case ACTION.REFRESH_RECEIVE_ADDRESS: {
-      const { data: { walletId, receiveAddress } } = action
+      const {
+        data: { walletId, receiveAddress }
+      } = action
       return {
         ...state,
         [walletId]: {

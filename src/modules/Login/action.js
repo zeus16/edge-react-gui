@@ -23,6 +23,7 @@ import { getReceiveAddresses } from '../utils.js'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
+  global.pnow && global.pnow('initializeAccount')
   const walletInfos = account.allKeys
   const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
   console.log('Wallet Infos:', filteredWalletInfos)
@@ -40,6 +41,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   } catch (e) {
     console.log(e)
   }
+  global.pnow && global.pnow('fetchLoginMessages DONE')
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
     PushNotification.configure({
@@ -83,6 +85,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.currencyPlugins.push({ pluginName, currencyInfo })
     }
     if (account.activeWalletIds.length < 1) {
+      global.pnow && global.pnow('fetchLoginMessages')
       // we are going to assume that since there is no wallets, this is a first time user
       Actions[Constants.ONBOARDING]()
       // set the property on the user so that we can launch on boarding
@@ -127,7 +130,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.currencyCode = currencyCode
     }
     const activeWalletIds = account.activeWalletIds
+    global.pnow && global.pnow('dispatch:insertWalletIdsForProgress')
     dispatch(insertWalletIdsForProgress(activeWalletIds))
+    global.pnow && global.pnow('dispatch:insertWalletIdsForProgress DONE')
     const archivedWalletIds = account.archivedWalletIds
     const currencyWallets = account.currencyWallets
 
@@ -191,6 +196,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     const receiveAddresses = await getReceiveAddresses(currencyWallets)
 
+    global.pnow && global.pnow('dispatch:ACCOUNT_INIT_COMPLETE')
     dispatch(
       actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, {
         ...accountInitObject,
@@ -198,7 +204,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       })
     )
     // $FlowFixMe
+    global.pnow && global.pnow('dispatch:updateWalletsRequest')
     dispatch(updateWalletsRequest())
+    global.pnow && global.pnow('dispatch:updateWalletsRequest DONE')
   } catch (e) {
     console.log(e)
   }
