@@ -80,7 +80,7 @@ if (ENV.LOG_SERVER) {
 
 const clog = console.log
 
-const PERF_LOGGING_ONLY = false
+const PERF_LOGGING_ONLY = true
 
 if (PERF_LOGGING_ONLY) {
   // $FlowFixMe: suppressing this error until we can find a workaround
@@ -89,7 +89,12 @@ if (PERF_LOGGING_ONLY) {
 
 // $FlowFixMe: suppressing this error until we can find a workaround
 global.pnow = function (label: string) {
-  clog('PTIMER PNOW: ' + label + ':' + Date.now())
+  const d = new Date(Date.now())
+  const h = ('0' + d.getHours().toString()).slice(-2)
+  const m = ('0' + d.getMinutes().toString()).slice(-2)
+  const s = ('0' + d.getSeconds().toString()).slice(-2)
+  const ms = ('00' + d.getMilliseconds().toString()).slice(-3)
+  clog(`PTIMER PNOW ${h}:${m}:${s}.${ms}: ${label}`)
 }
 
 // $FlowFixMe: suppressing this error until we can find a workaround

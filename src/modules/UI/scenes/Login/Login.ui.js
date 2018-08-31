@@ -30,6 +30,7 @@ export default class Login extends Component<Props, State> {
 
   onLogin = (error: ?Error = null, account: ?EdgeAccount, touchIdInfo: ?Object = null) => {
     if (error || !account) return
+    global.pnow && global.pnow('onLogin')
     this.props.initializeAccount(account, touchIdInfo)
 
     CONTEXT_API.listUsernames(this.props.context) // update users list after each login
