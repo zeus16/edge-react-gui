@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text } from 'react-native'
 
 import { EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../../../constants/IconConstants.js'
 import s from '../../../../../../locales/strings.js'
@@ -27,9 +26,7 @@ export default class XRPMinimumModal extends Component<XRPMinimumModalStateProps
           <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />
         </InteractiveModal.Icon>
 
-        <InteractiveModal.Title>
-          <Text style={{ textAlign: 'center' }}>{s.strings.request_xrp_minimum_notification_title}</Text>
-        </InteractiveModal.Title>
+        <InteractiveModal.Title>{s.strings.request_xrp_minimum_notification_title}</InteractiveModal.Title>
 
         <InteractiveModal.Body>
           <InteractiveModal.Description style={{ textAlign: 'center' }}>{s.strings.request_xrp_minimum_notification_body}</InteractiveModal.Description>
