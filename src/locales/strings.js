@@ -2,15 +2,14 @@
 
 import DeviceInfo from 'react-native-device-info'
 
-import en from './en_US'
+import en from './en_US.js'
 import es from './strings/es.json'
 import it from './strings/it.json'
 import ru from './strings/ru.json'
 
 const allLocales = { en, ru, es, it }
 
-const strings: { [stringCode: string]: string } = {}
-const out = { strings }
+const out = { strings: en }
 
 selectLocale(DeviceInfo.getDeviceLocale())
 

@@ -168,15 +168,15 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     Actions.pop()
     const successInfo = {
       success: true,
-      title: 'Transaction Sent',
-      message: 'Your transaction has been successfully sent.'
+      title: s.strings.send_confirmation_transaction_sent,
+      message: s.strings.send_confirmation_your_transactions_has_been_sent
     }
     dispatch({ type: 'OPEN_AB_ALERT', data: successInfo })
   } catch (e) {
     dispatch(updateSpendPending(false))
     const errorInfo = {
       success: false,
-      title: 'Transaction Failure',
+      title: s.strings.send_confirmation_transaction_failure,
       message: e.message
     }
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
