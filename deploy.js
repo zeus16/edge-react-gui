@@ -200,7 +200,7 @@ function buildIos (buildObj) {
 
   call('agvtool new-marketing-version ' + buildObj.version)
   call('agvtool new-version -all ' + buildObj.buildNum)
-  cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
+  cmdStr = `xcodebuild -allowProvisioningUpdates -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
   cmdStr = cmdStr + ' | xcpretty && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
