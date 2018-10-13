@@ -196,7 +196,7 @@ function buildIos (buildObj) {
   cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}' "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -t 7200 -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
+  call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
   call('agvtool new-marketing-version ' + buildObj.version)
   call('agvtool new-version -all ' + buildObj.buildNum)
@@ -236,7 +236,7 @@ function buildIos (buildObj) {
   cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}'  "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -t 7200 -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
+  call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
   cmdStr = `xcodebuild -exportArchive -allowProvisioningUpdates -archivePath "${buildDir}/${archiveDir}" -exportPath ${
     buildObj.tmpDir
