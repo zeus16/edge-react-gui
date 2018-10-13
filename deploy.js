@@ -118,6 +118,8 @@ function makeCommonPost (buildObj) {
   buildObj.version = packageJson.version
   if (buildObj.repoBranch === 'develop') {
     buildObj.version = packageJson.version + '-d'
+  } else if (buildObj.repoBranch === 'test') {
+    buildObj.version = packageJson.version + '-t'
   } else {
     buildObj.version = packageJson.version
   }
