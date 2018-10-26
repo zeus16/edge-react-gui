@@ -27,10 +27,12 @@ import { MenuProvider } from 'react-native-popup-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SplashScreen from 'react-native-smart-splash-screen'
+import { WebView } from 'react-native-webview'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import { connect } from 'react-redux'
 import * as URI from 'uri-js'
+import { Bridge } from 'yaob'
 
 import ENV from '../../env.json'
 import MenuIcon from '../assets/images/MenuButton/menu.png'
@@ -228,13 +230,17 @@ async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, use
   }
 }
 
+global.mycounter = 0
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any
   keyboardDidHideListener: any
+  webviewRef: { current: null | WebView }
+  bridge: Bridge
 
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
+    this.webviewRef = React.createRef()
 
     this.state = {
       context: undefined
@@ -282,7 +288,36 @@ export default class Main extends Component<Props, State> {
       })
       .catch(e => console.log(e))
     Linking.addEventListener('url', this.handleOpenURL)
+    this.bridge = new Bridge({
+      sendMessage: message => {
+        const webview = this.webviewRef.current
+        if (webview) {
+          webview.injectJavaScript(`window.bridgeServer.handleMessage(${JSON.stringify(message)})`)
+        }
+      }
+    })
+    this.bridge.getRoot().then(rootApi => {
+      console.log('GOT ROOT API')
+      global.utilWebviewApi = rootApi
+      this.dumbSendMesage()
+    })
   }
+
+  dumbSendMesage () {
+    setTimeout(async () => {
+      console.log('dumbSendMesage sending...')
+      const result = await global.utilWebviewApi.seed_and_keys_from_mnemonic('hey there ' + global.mycounter.toString())
+      console.log(result)
+      global.mycounter++
+      this.dumbSendMesage()
+    }, 3000)
+  }
+
+  onMessage = (event: any) => {
+    console.log('GOT MESSAGE', event.nativeEvent.data)
+    this.bridge.handleMessage(JSON.parse(event.nativeEvent.data))
+  }
+
   doDeepLink (url: string) {
     const parsedUri = URI.parse(url)
     const query = parsedUri.query
@@ -666,6 +701,15 @@ export default class Main extends Component<Props, State> {
         <PasswordRecoveryReminderModalConnector />
         <ModalManager />
         <PermissionsManager />
+        <WebView
+          ref={this.webviewRef}
+          source={{
+            uri: 'http://10.10.7.193:8000'
+            // uri: 'http://10.10.8.168:8001'
+            // uri: 'https://developer.airbitz.co/content/mymonero/index.html'
+          }}
+          onMessage={this.onMessage}
+        />
       </MenuProvider>
     )
   }

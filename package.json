@@ -154,7 +154,8 @@
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
     "vm-browserify": "0.0.4",
-    "why-did-you-update": "^0.1.1"
+    "why-did-you-update": "^0.1.1",
+    "yaob": "^0.3.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.1.0",
