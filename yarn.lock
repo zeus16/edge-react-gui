@@ -4300,7 +4300,7 @@ fbjs-scripts@^0.8.1:
     semver "^5.1.0"
     through2 "^2.0.0"
 
-fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.9:
+fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.17, fbjs@^0.8.9:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   integrity sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
@@ -8519,6 +8519,11 @@ react-native-animatable@^1.1.0, react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-app-settings@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-app-settings/-/react-native-app-settings-2.0.0.tgz#d2dbcf88dbb40d7261599fc373b35bd0f9fd886e"
+  integrity sha1-0tvPiNu0DXJhWZ/Dc7Nb0Pn9iG4=
+
 react-native-background-fetch@^2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-2.4.3.tgz#4621cca2a8f9e96edbf0556afcd04873bd698f37"
@@ -8858,6 +8863,14 @@ react-native-vector-icons@4.6.0, react-native-vector-icons@^4.2.0, react-native-
     keymirror "^0.1.1"
     prop-types "^15.6.0"
     warning "^3.0.0"
+
+react-native-webview@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-2.5.0.tgz#70d2a82f723c77e5ed8156e4f46f6721fb54092b"
+  integrity sha512-9FkDRxkHexw9pq8V8i4kj4DqjgB+O2FzY6rsBICShTDhEF0c0dn0NBsJ0qW4EOd4jhp/rVVEYbJXUbpAUr9EuA==
+  dependencies:
+    escape-string-regexp "^1.0.5"
+    fbjs "^0.8.17"
 
 react-native@0.55.3:
   version "0.55.3"

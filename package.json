@@ -141,6 +141,7 @@
     "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446",
     "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^4.2.0",
+    "react-native-webview": "^2.5.0",
     "react-native-webview-file-upload-android": "https://github.com/rhinogram/react-native-webview-file-upload-android.git#feature/support-file-downloading",
     "react-redux": "^5.0.5",
     "react-test-renderer": "^16.4.1",
