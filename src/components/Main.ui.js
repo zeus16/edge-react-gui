@@ -55,6 +55,7 @@ import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConne
 import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
 import { CreateWalletAccountConnector } from '../connectors/scenes/CreateWalletAccountConnector.js'
+import { CreateWalletAccountLoginConnector } from '../connectors/scenes/CreateWalletAccountLoginConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
@@ -394,6 +395,15 @@ export default class Main extends Component<Props, State> {
                           navTransparent={true}
                           component={CreateWalletAccountConnector}
                           renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderHelpButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_ACCOUNT_LOGIN}
+                          navTransparent={true}
+                          component={CreateWalletAccountLoginConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SETUP)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton()}
                         />

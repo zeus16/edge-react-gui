@@ -127,6 +127,7 @@ const strings = {
   create_wallet_account_instructions: 'To proceed you will be asked to log in to your existing %s account:',
   create_wallet_new_account: 'No %s account yet? Create your new account below:',
   create_wallet_account_handle: 'Account Handle',
+  login: 'Login',
   help_build: 'Build',
   help_modal_title: 'Crypto Wallet',
   help_version: 'Version',

@@ -32,20 +32,21 @@ const modifiedStyle = {
   }
 }
 
-export type CreateWalletAccountSetupOwnProps = {
+export type CreateWalletAccountLoginOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType
 }
-type Props = CreateWalletAccountSetupOwnProps
+type Props = CreateWalletAccountLoginOwnProps
 type State = {
-  accountHandle: string
+  walletName: string
 }
 
-export class CreateWalletAccountSetup extends Component<Props, State> {
+export class CreateWalletAccountLogin extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      accountHandle: '@'
+      accountHandle: '@',
+      password: ''
     }
   }
 
@@ -57,8 +58,12 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     this.setState({ accountHandle })
   }
 
-  onSetup = () => {
-    // check username availability
+  handleChangePassword = (password: string) => {
+    this.setState({ password })
+  }
+
+  onLogin = () => {
+
   }
 
   render () {
@@ -80,9 +85,18 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
                 returnKeyType={'next'}
                 onSubmitEditing={this.onNext}
               />
-
+              <FormField
+                onChangeText={this.handleChangePassword}
+                style={modifiedStyle}
+                label={s.strings.password}
+                value={this.state.password}
+                error={''}
+                secureTextEntry
+                returnKeyType={'done'}
+                onSubmitEditing={this.onDone}
+              />
               <View style={styles.buttons}>
-                <PrimaryButton style={[styles.next]} onPress={this.onSetup}>
+                <PrimaryButton style={[styles.next]} onPress={this.onLogin}>
                   <PrimaryButton.Text>{s.strings.login}</PrimaryButton.Text>
                 </PrimaryButton>
               </View>
