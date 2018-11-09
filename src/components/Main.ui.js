@@ -54,6 +54,8 @@ import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
 import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
+import { CreateWalletAccountConnector } from '../connectors/scenes/CreateWalletAccountConnector.js'
+import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
 import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
@@ -156,6 +158,8 @@ const WALLETS = s.strings.title_wallets
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
 const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
+const CREATE_WALLET_ACCOUNT = s.strings.create_wallet_create_account
+const CREATE_WALLET_ACCOUNT_SETUP = s.strings.create_wallet_create_account
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
 const SCAN = s.strings.title_scan
@@ -383,6 +387,24 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CREATE_WALLET)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
+                        />
+                        
+                        <Scene
+                          key={Constants.CREATE_WALLET_ACCOUNT}
+                          navTransparent={true}
+                          component={CreateWalletAccountConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderHelpButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_ACCOUNT_SETUP}
+                          navTransparent={true}
+                          component={CreateWalletAccountSetupConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SETUP)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderHelpButton()}
                         />
 
                         <Scene

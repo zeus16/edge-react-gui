@@ -105,10 +105,21 @@ export const styles = {
   textInput: {
     flex: 1
   },
+  currencyLogoWrapper: {
+
+  },
+  currencyLogo: {
+    alignSelf: 'center',
+    marginTop: scale(24),
+    height: scale(64)
+  },
   instructionalArea: {
     paddingVertical: scale(16),
-    paddingHorizontal: scale(20),
-    height: scale(80)
+    paddingHorizontal: scale(20)
+  },
+  createWalletPromptArea: {
+    paddingVertical: scale(36),
+    paddingHorizontal: scale(20)
   },
   instructionalText: {
     fontSize: scale(16),
