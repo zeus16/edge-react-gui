@@ -123,7 +123,8 @@ export const styles = {
   },
   instructionalText: {
     fontSize: scale(16),
-    textAlign: 'center'
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
   },
   reviewArea: {
     paddingVertical: scale(18)
@@ -161,6 +162,27 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3
+  },
+  selectPaymentLower: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    width: '100%',
+    marginVertical: scale(24),
+    paddingHorizontal: scale(20)
+  },
+  paymentArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: scale(24),
+    paddingBottom: scale(18)
+  },
+  paymentLeft: {
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_2
+  },
+  paymentRight: {
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_2,
+    fontWeight: '500'
   }
 }
 

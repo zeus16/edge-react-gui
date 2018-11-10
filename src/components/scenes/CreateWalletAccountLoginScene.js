@@ -97,7 +97,7 @@ export class CreateWalletAccountLogin extends Component<Props, State> {
               />
               <View style={styles.buttons}>
                 <PrimaryButton style={[styles.next]} onPress={this.onLogin}>
-                  <PrimaryButton.Text>{s.strings.login}</PrimaryButton.Text>
+                  <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
                 </PrimaryButton>
               </View>
             </View>
