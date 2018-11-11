@@ -5,47 +5,37 @@ import { Image, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
-import { scale } from '../../lib/scaling.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWalletType } from '../../types.js'
-import { FormField } from '../common/FormField.js'
+import Text from '../../modules/UI/components/FormattedText'
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
+import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 
 const logos = {
   eos: eosLogo,
   steem: steemLogo
 }
-const modifiedStyle = {
-  ...MaterialInputOnWhite,
-  container: {
-    ...MaterialInputOnWhite.container,
-    width: '100%',
-    marginTop: scale(16),
-    marginBottom: scale(24)
-  }
-}
 
-export type CreateWalletAccountSetupOwnProps = {
+export type CreateWalletAccountReviewOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType
 }
-type Props = CreateWalletAccountSetupOwnProps
+type Props = CreateWalletAccountReviewOwnProps
 type State = {
-  accountHandle: string
+  walletName: string
 }
 
-export class CreateWalletAccountSetup extends Component<Props, State> {
+export class CreateWalletAccountReview extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      accountHandle: '@'
+
     }
   }
 
@@ -57,13 +47,18 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     this.setState({ accountHandle })
   }
 
-  onSetup = () => {
-    Actions[Constants.CREATE_WALLET_ACCOUNT_SELECT]({
-      ...this.props
+  handleChangePassword = (password: string) => {
+    this.setState({ password })
+  }
+
+  onPressSelect = () => {
+    this.setState({
     })
   }
 
   render () {
+    const amountString = '20 EOS'
+    const instructionSyntax = sprintf(s.strings.create_wallet_account_make_payment, amountString)
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -71,25 +66,29 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
           <KeyboardAwareScrollView>
             <View style={styles.view}>
               <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
-              <FormField
-                style={modifiedStyle}
-                autoFocus
-                clearButtonMode={'while-editing'}
-                autoCorrect={false}
-                onChangeText={this.handleChangeHandle}
-                label={s.strings.create_wallet_account_handle}
-                value={this.state.accountHandle}
-                returnKeyType={'next'}
-                onSubmitEditing={this.onNext}
-              />
-
+              <View style={styles.createWalletPromptArea}>
+                <Text style={styles.instructionalText}>{instructionSyntax}</Text>
+              </View>
+            </View>
+            <View style={styles.selectPaymentLower}>
               <View style={styles.buttons}>
-                <PrimaryButton style={[styles.next]} onPress={this.onSetup}>
-                  <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+                <PrimaryButton style={[styles.next]} onPress={this.onPressSelect}>
+                  <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>
                 </PrimaryButton>
+              </View>
+              <View style={styles.paymentArea}>
+                <Text style={styles.paymentLeft}>Amount due:</Text>
+                <Text style={styles.paymentRight}>5.00 EOS</Text>
               </View>
             </View>
           </KeyboardAwareScrollView>
+          {this.state.isModalVisible && (
+            <WalletListModal
+              topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
+              type={Constants.FROM}
+              onSelectWallet={this.onSelectWallet}
+            />
+          )}
         </View>
       </SafeAreaView>
     )

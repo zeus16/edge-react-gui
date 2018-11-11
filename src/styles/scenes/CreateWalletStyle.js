@@ -118,7 +118,8 @@ export const styles = {
     paddingHorizontal: scale(20)
   },
   createWalletPromptArea: {
-    paddingVertical: scale(36),
+    paddingTop: scale(16),
+    paddingBottom: scale(32),
     paddingHorizontal: scale(20)
   },
   instructionalText: {
@@ -166,14 +167,14 @@ export const styles = {
   selectPaymentLower: {
     backgroundColor: THEME.COLORS.GRAY_4,
     width: '100%',
-    marginVertical: scale(24),
+    marginVertical: scale(18),
     paddingHorizontal: scale(20)
   },
   paymentArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: scale(24),
-    paddingBottom: scale(18)
+    paddingTop: scale(12),
+    paddingBottom: scale(12)
   },
   paymentLeft: {
     fontSize: scale(16),
@@ -183,6 +184,41 @@ export const styles = {
     fontSize: scale(16),
     color: THEME.COLORS.GRAY_2,
     fontWeight: '500'
+  },
+  accountReviewWalletNameArea: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: scale(18),
+    paddingBottom: scale(12),
+    alignItems: 'center'
+  },
+  accountReviewWalletNameText: {
+    fontSize: scale(16),
+    color: THEME.COLORS.PRIMARY
+  },
+  accountReviewInfoArea: {
+    width: '100%',
+    marginVertical: scale(14),
+    paddingHorizontal: scale(20)
+  },
+  accountReviewInfoText: {
+    color: THEME.COLORS.GRAY_2
+  },
+  accountReviewConfirmArea: {
+    width: '100%',
+    marginTop: scale(12),
+    marginBottom: scale(18),
+    paddingHorizontal: scale(30)
+  },
+  accountReviewConfirmText: {
+    color: THEME.COLORS.GRAY_2,
+    textAlign: 'center'
+  },
+  confirmButtonArea: {
+    marginHorizontal: scale(30)
+  },
+  confirmButton: {
+
   }
 }
 

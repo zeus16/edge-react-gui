@@ -58,6 +58,7 @@ import { CreateWalletAccountConnector } from '../connectors/scenes/CreateWalletA
 import { CreateWalletAccountLoginConnector } from '../connectors/scenes/CreateWalletAccountLoginConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
+import { CreateWalletAccountReviewConnector } from '../connectors/scenes/CreateWalletAccountReviewConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
 import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
@@ -163,6 +164,7 @@ const CREATE_WALLET = s.strings.title_create_wallet
 const CREATE_WALLET_ACCOUNT = s.strings.create_wallet_create_account
 const CREATE_WALLET_ACCOUNT_SETUP = s.strings.create_wallet_create_account
 const CREATE_WALLET_ACCOUNT_SELECT = s.strings.create_wallet_account_select_payment
+const CREATE_WALLET_ACCOUNT_REVIEW = s.strings.title_create_wallet
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
 const SCAN = s.strings.title_scan
@@ -424,6 +426,15 @@ export default class Main extends Component<Props, State> {
                           navTransparent={true}
                           component={CreateWalletAccountSelectConnector}
                           renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SELECT)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderHelpButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_ACCOUNT_REVIEW}
+                          navTransparent={true}
+                          component={CreateWalletAccountReviewConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_REVIEW)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton()}
                         />
