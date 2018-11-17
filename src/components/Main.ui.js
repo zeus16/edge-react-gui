@@ -3,7 +3,7 @@
 import { makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
 import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
-import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
+import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory, eosCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -130,7 +130,8 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory
+  ufoCurrencyPluginFactory,
+  eosCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux

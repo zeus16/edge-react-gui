@@ -219,6 +219,12 @@ export const styles = {
   },
   confirmButton: {
 
+  },
+  feedbackIcon: {
+    alignSelf: 'flex-end',
+    marginTop: scale(43),
+    width: scale(25),
+    height: scale(25)
   }
 }
 
