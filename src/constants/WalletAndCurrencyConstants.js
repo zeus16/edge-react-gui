@@ -12,6 +12,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   DASH: 'dash',
   DGB: 'digibyte',
   ETH: 'ethereum',
+  EOS: 'eos',
   FTC: 'feathercoin',
   LTC: 'litecoin',
   XMR: 'monero',
