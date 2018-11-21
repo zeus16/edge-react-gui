@@ -7,8 +7,11 @@ import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
+import { makeSpend } from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
+import { getAuthRequired, getSpendInfo } from '../modules/UI/scenes/SendConfirmation/selectors.js'
+import { newSpendInfo, updateTransaction } from './SendConfirmationActions.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
 export const updateWalletName = (walletName: string) => ({
@@ -74,4 +77,19 @@ export const checkHandleAvailability = (handle: string) => (dispatch: Dispatch, 
   } catch (e) {
 
   }
+}
+
+export const createAccountTransaction = (walletId: string, data: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { walletId, currencyCode: 'BTC' } })
+  const edgeWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const parsedUriClone = { ...data }
+  const spendInfo = getSpendInfo(state, parsedUriClone)
+
+  const authRequired = getAuthRequired(state, spendInfo)
+  dispatch(newSpendInfo(spendInfo, authRequired))
+
+  makeSpend(edgeWallet, spendInfo)
+    .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, parsedUriClone, null, null)))
+    .catch(e => dispatch(updateTransaction(null, parsedUriClone, null, e)))
 }
