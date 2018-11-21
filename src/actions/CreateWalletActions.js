@@ -1,8 +1,10 @@
+import { createSimpleConfirmModal, showModal } from 'edge-components'
 // @flow
 import React from 'react'
 import { Image } from 'react-native'
-import { showModal, createSimpleConfirmModal } from 'edge-components'
 import { Actions } from 'react-native-router-flux'
+
+import walletIcon from '../assets/images/tabbar/wallets.png'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
@@ -11,10 +13,9 @@ import { makeSpend } from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import { getAuthRequired, getSpendInfo } from '../modules/UI/scenes/SendConfirmation/selectors.js'
+import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { newSpendInfo, updateTransaction } from './SendConfirmationActions.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
-import * as UI_SELECTORS from '../modules/UI/selectors.js'
-import walletIcon from '../assets/images/tabbar/wallets.png'
 
 export const updateWalletName = (walletName: string) => ({
   type: 'UPDATE_WALLET_NAME',
