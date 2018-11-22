@@ -394,7 +394,7 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                         />
-                        
+
                         <Scene
                           key={Constants.CREATE_WALLET_ACCOUNT}
                           navTransparent={true}
