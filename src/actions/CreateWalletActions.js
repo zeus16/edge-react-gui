@@ -8,7 +8,7 @@ import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import { makeSpend } from '../modules/Core/Wallets/api.js'
+import { makeSpend, getWallet as getCoreWallet } from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import { getAuthRequired, getSpendInfo } from '../modules/UI/scenes/SendConfirmation/selectors.js'
@@ -52,7 +52,7 @@ export const createCurrencyWallet = (
     keyOptions: format ? { format } : {}
   })
     .then(edgeWallet => {
-      Actions.popTo(Constants.WALLET_LIST_SCENE)
+      if (popScene) Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
       if (selectWallet) {
         dispatch(selectWalletAction(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
@@ -103,11 +103,10 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
 
 export const fetchAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams) => async (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[paymentParams.accountCurrencyCode]
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  const walletId = UI_SELECTORS.getSelectedWalletId(state)
+  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   try {
-    const activationQuote = await currencyPlugin.otherMethods.getAccountActivationQuote(paymentParams)
+    const activationQuote = await coreWallet.otherMethods.getAccountActivationQuote(paymentParams)
     dispatch({
       type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
       data: {

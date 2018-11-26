@@ -123,7 +123,7 @@ const strings = {
   create_wallet_fiat_type_label: 'Wallet Fiat:',
   create_wallet_failed: 'Failed to create wallet',
   create_wallet_create_account: 'Create Account',
-  create_wallet_account_login: 'Account Login',
+  create_wallet_account_activate: 'Activate Account',
   create_wallet_account_instructions: 'To proceed you will be asked to log in to your existing %s account:',
   create_wallet_new_account: 'No %s account yet? Create your new account below:',
   create_wallet_account_handle_instruction: '',

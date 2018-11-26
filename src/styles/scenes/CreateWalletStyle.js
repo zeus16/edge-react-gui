@@ -194,7 +194,8 @@ export const styles = {
   },
   accountReviewWalletNameText: {
     fontSize: scale(16),
-    color: THEME.COLORS.PRIMARY
+    color: THEME.COLORS.SECONDARY,
+    fontWeight: 'bold'
   },
   accountReviewInfoArea: {
     width: '100%',

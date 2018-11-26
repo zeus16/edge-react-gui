@@ -3,7 +3,12 @@
 import { type EdgeParsedUri } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import { createAccountTransaction, fetchAccountActivationInfo, fetchAccountActivationPaymentInfo } from '../../actions/CreateWalletActions.js'
+import {
+  createAccountTransaction,
+  fetchAccountActivationInfo,
+  fetchAccountActivationPaymentInfo,
+  createCurrencyWallet
+} from '../../actions/CreateWalletActions.js'
 import { CreateWalletAccountSelect, type AccountPaymentParams } from '../../components/scenes/CreateWalletAccountSelectScene'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
@@ -13,7 +18,7 @@ const mapStateToProps = (state: State) => {
   const accountActivationPaymentInfo = state.ui.scenes.createWallet.accountActivationPaymentInfo
   const { supportedCurrencies, activationCost } = handleActivationInfo
   const { currencyCode, paymentAddress, exchangeAmount, nativeAmount, expirationDate } = accountActivationPaymentInfo
-
+  const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
   return {
     paymentCurrencyCode: currencyCode,
     paymentAddress,
@@ -22,14 +27,16 @@ const mapStateToProps = (state: State) => {
     expirationDate,
     supportedCurrencies,
     activationCost,
-    wallets: state.ui.wallets.byId
+    wallets: state.ui.wallets.byId,
+    isCreatingWallet
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): CreateWalletAccountSelectDispatchProps => ({
   createAccountTransaction: (walletId: string, data: GuiMakeSpendInfo | EdgeParsedUri) => dispatch(createAccountTransaction(walletId, data)),
   fetchAccountActivationInfo: (currencyCode: string) => dispatch(fetchAccountActivationInfo(currencyCode)),
-  fetchAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams) => dispatch(fetchAccountActivationPaymentInfo(paymentInfo))
+  fetchAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams) => dispatch(fetchAccountActivationPaymentInfo(paymentInfo)),
+  createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, popScene: boolean, selectWallet: boolean) => dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, popScene, selectWallet))
 })
 
 export const CreateWalletAccountSelectConnector = connect(
