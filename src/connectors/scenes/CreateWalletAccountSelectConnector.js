@@ -12,6 +12,7 @@ import {
 import { CreateWalletAccountSelect, type AccountPaymentParams } from '../../components/scenes/CreateWalletAccountSelectScene'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
+import { getDefaultDenomination } from '../../modules/UI/selectors.js'
 
 const mapStateToProps = (state: State) => {
   const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
@@ -19,6 +20,8 @@ const mapStateToProps = (state: State) => {
   const { supportedCurrencies, activationCost } = handleActivationInfo
   const { currencyCode, paymentAddress, exchangeAmount, nativeAmount, expirationDate } = accountActivationPaymentInfo
   const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
+  const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : ''
+  const paymentDenominationSymbol = paymentDenomination.symbol
   return {
     paymentCurrencyCode: currencyCode,
     paymentAddress,
@@ -28,7 +31,8 @@ const mapStateToProps = (state: State) => {
     supportedCurrencies,
     activationCost,
     wallets: state.ui.wallets.byId,
-    isCreatingWallet
+    isCreatingWallet,
+    paymentDenominationSymbol
   }
 }
 

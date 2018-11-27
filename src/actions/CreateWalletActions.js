@@ -57,6 +57,7 @@ export const createCurrencyWallet = (
       if (selectWallet) {
         dispatch(selectWalletAction(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
       }
+      return edgeWallet
     })
     .catch(async error => {
       await showModal(errorModal(s.strings.create_wallet_failed, error))
@@ -121,13 +122,12 @@ export const fetchAccountActivationPaymentInfo = (paymentParams: AccountPaymentP
 
 export const createAccountTransaction = (walletId: string, data: string) => async (dispatch: Dispatch, getState: GetState) => {
   // check available funds
-  const currencyCode = data.currencyCode || 'BTC'
-  const nativeAmount = data.nativeAmount || '10000000'
-  const publicAddress = '1ABJbqWtYKiuPBGA8NNkYVJsfGrbf6hiB8'
+  const state = getState()
+  const { paymentAddress, nativeAmount, currencyCode } = state.ui.scenes.createWallet.accountActivationPaymentInfo
   const makeSpendInfo = {
     currencyCode,
     nativeAmount,
-    publicAddress,
+    publicAddress: paymentAddress,
     lockInputs: true,
     onSuccess: () => Actions[Constants.WALLET_LIST_SCENE]()
   }
