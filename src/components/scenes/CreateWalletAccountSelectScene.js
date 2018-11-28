@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { Image, ScrollView, View, ActivityIndicator } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
@@ -40,7 +41,10 @@ export type CreateWalletAccountSelectOwnProps = {
 type Props = CreateWalletAccountSelectOwnProps
 type State = {
   walletName: string,
-  walletId: string
+  walletId: string,
+  isModalVisisble: boolean,
+  error: string,
+  createdWallet: Promise<EdgeCurrencyWallet>
 }
 
 export class CreateWalletAccountSelect extends Component<Props, State> {
@@ -77,14 +81,17 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     })
   }
 
-  onPressSubmit = () => {
-    const { createAccountTransaction } = this.props
+  onPressSubmit = async () => {
+    const { createAccountTransaction, accountName } = this.props
+    const { walletId } = this.state
+    const createdWallet = await this.state.createdWallet
+    const createdWalletId = createdWallet.id
     // will grab data from state in actions
-    createAccountTransaction()
+    createAccountTransaction(createdWalletId, accountName, walletId)
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { wallets, accountName, selectedWalletType, fetchAccountActivationPaymentInfo } = this.props
+    const { wallets, accountName, selectedWalletType, fetchWalletAccountActivationPaymentInfo } = this.props
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
     this.setState({
@@ -98,7 +105,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       paymentCurrencyCode
     }
     await this.state.createdWallet
-    fetchAccountActivationPaymentInfo(paymentInfo)
+    fetchWalletAccountActivationPaymentInfo(paymentInfo)
   }
 
   renderSelectWallet = () => {
