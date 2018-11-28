@@ -149,5 +149,7 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: GuiFiatType, index: string) => index
+  keyExtractor = (item: GuiFiatType, index: string) => {
+    return item.value
+  }
 }
