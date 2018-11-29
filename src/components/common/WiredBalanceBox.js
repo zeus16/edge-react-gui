@@ -10,6 +10,7 @@ import { type State } from '../../modules/ReduxTypes.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import { styles } from '../../styles/components/WiredBalanceBoxStyle.js'
 import { getFiatSymbol } from '../../util/utils.js'
+import { AnimatedText } from './AnimatedText.js'
 
 type BalanceBoxState = {}
 
@@ -57,7 +58,9 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
             <T style={[styles.totalBalanceText]}>{s.strings.fragment_wallets_balance_text}</T>
           </View>
           <View style={[styles.currentBalanceBoxDollarsWrap]}>
-            <T style={[styles.currentBalanceBoxDollars]}>{fiatBalanceString}</T>
+            <AnimatedText fontSize={44} style={[styles.currentBalanceBoxDollars]}>
+              {fiatBalanceString}
+            </AnimatedText>
           </View>
         </View>
       </View>
