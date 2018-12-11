@@ -25,9 +25,10 @@ const logos = {
 }
 
 export type AccountPaymentParams = {
-  accountCurrencyCode: string,
-  accountName: string,
-  paymentCurrencyCode: string
+  requestedAccountName: string,
+  currencyCode: string,
+  ownerPublicKey: string,
+  activePublicKey: string
 }
 
 export type CreateWalletAccountSelectStateProps = {
@@ -102,7 +103,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { wallets, accountName, selectedWalletType, fetchWalletAccountActivationPaymentInfo } = this.props
+    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo } = this.props
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
     this.setState({
@@ -110,12 +111,16 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       walletId,
       walletName
     })
+    const activatingWallet = await this.state.createdWallet
+    const ownerPublicKey = activatingWallet.keys.ownerPublicKey
+    const activePublicKey = activatingWallet.keys.publicKey
     const paymentInfo: AccountPaymentParams = {
-      accountCurrencyCode: selectedWalletType.currencyCode,
-      accountName,
-      paymentCurrencyCode
+      ownerPublicKey,
+      activePublicKey,
+      requestedAccountName: accountName,
+      currencyCode: paymentCurrencyCode
     }
-    await this.state.createdWallet
+
     fetchWalletAccountActivationPaymentInfo(paymentInfo)
   }
 

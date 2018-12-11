@@ -3,7 +3,7 @@
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
 import type { EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
-import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
+import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory, eosCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -122,6 +122,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   bitcoinsvCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
+  eosCurrencyPluginFactory,
   stellarCurrencyPluginFactory,
   rippleCurrencyPluginFactory,
   moneroCurrencyPluginFactory,
