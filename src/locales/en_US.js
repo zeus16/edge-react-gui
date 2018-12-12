@@ -145,6 +145,7 @@ const strings = {
   create_wallet_account_ErrorInvalidAccountName: 'Invalid username',
   create_wallet_account_ErrorAccountUnavailable: 'Username unavailable',
   create_wallet_account_ErrorUnknownError: 'Unknown error. Please try again later.',
+  create_wallet_account_unknown_denom: 'Unable to get denom from wallet',
 
   submit: 'Submit',
   login: 'Login',

@@ -1,4 +1,6 @@
 // @flow
+
+import { bns } from 'biggystring'
 import { createSimpleConfirmModal, showModal } from 'edge-components'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
@@ -14,6 +16,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import { PluginBridge } from '../modules/UI/scenes/Plugins/api.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
+import { getExchangeDenomFromWallet } from '../util/utils.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
 export const updateWalletName = (walletName: string) => ({
@@ -86,11 +89,11 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
 }
 
 export type AccountActivationPaymentInfoType = {
-    currencyCode: string,
-    amount: string,
-    expireTime: number,
-    paymentAddress: string,
-    rate: number
+  currencyCode: string,
+  amount: string,
+  expireTime: number,
+  paymentAddress: string,
+  rate: number
 }
 
 export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams) => async (dispatch: Dispatch, getState: GetState) => {
@@ -150,12 +153,16 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const createdWallet = UI_SELECTORS.getWallet(state, createdWalletId)
+  const paymentWallet = UI_SELECTORS.getWallet(state, paymentWalletId)
   const createdWalletCurrencyCode = createdWallet.currencyCode
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
-  const { paymentAddress, nativeAmount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+  const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
   const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
-  if (handleAvailability) {
+  if (handleAvailability.result === 'AccountAvailable') {
+    const exchangeDenom = getExchangeDenomFromWallet(paymentWallet)
+    const multiplier = exchangeDenom.multiplier
+    const nativeAmount = bns.mul(amount, multiplier)
     const makeSpendInfo = {
       currencyCode,
       nativeAmount,

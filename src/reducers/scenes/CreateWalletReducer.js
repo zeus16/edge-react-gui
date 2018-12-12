@@ -2,8 +2,8 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
-import type { Action } from '../../modules/Action.js'
 import { type IsHandleAvailableType } from '../../actions/CreateWalletActions.js'
+import type { Action } from '../../modules/Action.js'
 
 export type HandleActivationInfo = {
   supportedCurrencies: { [string]: boolean },
@@ -60,7 +60,7 @@ const isCheckingHandleAvailability: Reducer<boolean, Action> = (state = false, a
   }
 }
 
-const isHandleAvailable: Reducer<IsHandleAvailableType, Action> = (state = {isAvailable: false, message: ''}, action: Action): IsHandleAvailableType => {
+const isHandleAvailable: Reducer<IsHandleAvailableType, Action> = (state = { isAvailable: false, message: '' }, action: Action): IsHandleAvailableType => {
   switch (action.type) {
     case 'IS_CHECKING_HANDLE_AVAILABILITY': {
       if (action.data === true) {

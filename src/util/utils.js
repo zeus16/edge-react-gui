@@ -8,6 +8,7 @@ import parse from 'url-parse'
 
 import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
+import s from '../locales/strings.js'
 import type { State } from '../modules/ReduxTypes'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import borderColors from '../theme/variables/css3Colors'
@@ -243,6 +244,15 @@ export const getCurrencyWalletFiatBalanceFromWallet = (wallet: GuiWallet, curren
   const unformattedFiatValue = convertCurrency(state, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
   const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
   return formattedFiatValue || '0'
+}
+
+// takes wallet currencyCode, assumes it is exchange denom, and returns denom object
+export const getExchangeDenomFromWallet = (guiWallet: GuiWallet) => {
+  const currencyCode = guiWallet.currencyCode
+  const denominations = guiWallet.denominations
+  const exchangeDenom = _.find(denominations, denom => denom.name === currencyCode)
+  if (!exchangeDenom) throw new Error(s.strings.create_wallet_account_unknown_denom)
+  return exchangeDenom
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)

@@ -5,11 +5,11 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
-import { intl } from '../../locales/intl'
 
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
+import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText'
@@ -18,7 +18,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types.js'
-import { fixFiatCurrencyCode, decimalOrZero, truncateDecimals } from '../../util/utils.js'
+import { decimalOrZero, fixFiatCurrencyCode, truncateDecimals } from '../../util/utils.js'
 
 const logos = {
   eos: eosLogo,
@@ -130,7 +130,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
 
   renderSelectWallet = () => {
     const { activationCost, selectedWalletType } = this.props
-    const roundedActivationCost = intl.formatNumber(decimalOrZero(truncateDecimals(activationCost, 6), 6))    
+    const roundedActivationCost = intl.formatNumber(decimalOrZero(truncateDecimals(activationCost, 6), 6))
     const currencyCode = selectedWalletType.currencyCode
     return (
       <View style={styles.selectPaymentLower}>
@@ -180,7 +180,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
-                {paymentDenominationSymbol} {roundedAmount} {paymentCurrencyCode}
+                {paymentDenominationSymbol} {roundedAmount === '0' ? <ActivityIndicator /> : `${roundedAmount} ${paymentCurrencyCode}`}
               </Text>
               <Text style={styles.paymentRight}>
                 {roundedActivationCost} {walletTypeToCreate}
@@ -245,7 +245,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
               topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
               type={Constants.FROM}
               onSelectWallet={this.onSelectWallet}
-              includedCurrencyCodes={[]}
+              includedCurrencyCodes={supportedCurrenciesList}
             />
           )}
         </View>

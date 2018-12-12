@@ -2,6 +2,7 @@
 
 import type { EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
 
+import { type AccountActivationPaymentInfoType, type IsHandleAvailableType } from '../actions/CreateWalletActions.js'
 import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
 import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
@@ -10,7 +11,6 @@ import type { AccountActivationPaymentInfo, HandleActivationInfo } from '../redu
 import { type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
-import { type AccountActivationPaymentInfoType, type IsHandleAvailableType } from '../actions/CreateWalletActions.js'
 
 type LegacyActionName =
   | 'OPEN_AB_ALERT'
@@ -249,10 +249,10 @@ export type Action =
       }
     }
   | {
-    type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
-    data: AccountActivationPaymentInfoType
-  }
+      type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
+      data: AccountActivationPaymentInfoType
+    }
   | {
-    type: 'IS_HANDLE_AVAILABLE',
-    data: IsHandleAvailableType
-  }
+      type: 'IS_HANDLE_AVAILABLE',
+      data: IsHandleAvailableType
+    }
