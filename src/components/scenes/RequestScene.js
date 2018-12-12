@@ -58,7 +58,7 @@ export type RequestLoadingProps = {
 
 export type RequestDispatchProps = {
   refreshReceiveAddressRequest(string): void,
-  onSelectWallet: (string, string) => void
+  onSelectWallet: (string, string) => mixed
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type ModalConfig = {

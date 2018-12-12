@@ -16,7 +16,7 @@ const mapStateToProps = (state: State) => {
   const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
   const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
   const { supportedCurrencies, activationCost } = handleActivationInfo
-  const { currencyCode, paymentAddress, exchangeAmount, nativeAmount, expirationDate } = walletAccountActivationPaymentInfo
+  const { currencyCode, paymentAddress, amount, expireTime } = walletAccountActivationPaymentInfo
   const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
   const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
   let paymentDenominationSymbol
@@ -29,9 +29,8 @@ const mapStateToProps = (state: State) => {
   return {
     paymentCurrencyCode: currencyCode,
     paymentAddress,
-    exchangeAmount,
-    nativeAmount,
-    expirationDate,
+    amount: amount || '0', // amount of payment type (non-EOS), waiting on fetch
+    expireTime,
     supportedCurrencies,
     activationCost,
     wallets: state.ui.wallets.byId,

@@ -13,7 +13,7 @@ export type WalletListTokenRowOwnProps = {
   currencyCode: string,
   metaTokenBalances: Object,
   wallet: GuiWallet,
-  onSelectWallet: (string, string) => void
+  onSelectWallet: (string, string) => mixed
 }
 
 export type WalletListTokenRowStateProps = {

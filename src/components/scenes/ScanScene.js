@@ -38,7 +38,7 @@ type Props = {
   addressModalDoneButtonPressed: () => void,
   legacyAddressModalContinueButtonPressed: () => void,
   legacyAddressModalCancelButtonPressed: () => void,
-  onSelectWallet: (string, string) => void
+  onSelectWallet: (string, string) => mixed
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text

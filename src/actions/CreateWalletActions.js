@@ -85,22 +85,32 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
   }
 }
 
+export type AccountActivationPaymentInfoType = {
+    currencyCode: string,
+    amount: string,
+    expireTime: number,
+    paymentAddress: string,
+    rate: number
+}
+
 export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   try {
-    const activationQuote = await coreWallet.otherMethods.getAccountActivationQuote(paymentParams)
+    const activationQuote: AccountActivationPaymentInfoType = await coreWallet.otherMethods.getAccountActivationQuote(paymentParams)
     dispatch({
       type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
-      data: {
-        ...activationQuote,
-        currencyCode: paymentParams.paymentCurrencyCode
-      }
+      data: activationQuote
     })
   } catch (e) {
     console.log(e)
   }
+}
+
+export type IsHandleAvailableType = {
+  isAvailable: boolean,
+  message: string
 }
 
 export const checkHandleAvailability = (currencyCode: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
@@ -111,10 +121,24 @@ export const checkHandleAvailability = (currencyCode: string, accountName: strin
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     const data = await currencyPlugin.otherMethods.validateAccount(accountName)
-    dispatch({ type: 'IS_HANDLE_AVAILABLE', data })
+    if (data.result === 'AccountAvailable') {
+      dispatch({
+        type: 'IS_HANDLE_AVAILABLE',
+        data: {
+          isAvailable: true,
+          message: data.result
+        }
+      })
+    }
   } catch (e) {
     console.log(e)
-    dispatch({ type: 'IS_HANDLE_AVAILABLE', data: true })
+    dispatch({
+      type: 'IS_HANDLE_AVAILABLE',
+      data: {
+        isAvailable: false,
+        message: e.name
+      }
+    })
   }
 }
 

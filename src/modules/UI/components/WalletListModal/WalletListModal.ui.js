@@ -17,8 +17,8 @@ type Props = {
   whichWallet?: string,
   currentScene: string,
   wallets: Object,
-  onSelectWallet: (string, string) => void,
-  excludedCurrencyCode?: string,
+  onSelectWallet: (string, string) => mixed,
+  excludedCurrencyCode?: string, // will need to change to array
   includedCurrencyCodes?: Array<string>
 }
 export default class WalletListModal extends Component<Props> {

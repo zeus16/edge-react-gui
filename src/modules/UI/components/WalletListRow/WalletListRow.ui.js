@@ -24,8 +24,9 @@ import { WalletListTokenRowConnector } from './WalletListTokenRowConnector.js'
 
 export type WalletListRowOwnProps = {
   wallet: GuiWallet,
-  onSelectWallet: (string, string) => void,
-  excludedCurrencyCode?: string
+  onSelectWallet: (string, string) => mixed,
+  excludedCurrencyCode?: string,
+  includedCurrencyCodes?: Array<string>
 }
 
 export type WalletListRowStateProps = {

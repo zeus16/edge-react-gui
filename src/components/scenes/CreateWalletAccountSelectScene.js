@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
+import { intl } from '../../locales/intl'
 
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
@@ -17,7 +18,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types.js'
-import { fixFiatCurrencyCode } from '../../util/utils.js'
+import { fixFiatCurrencyCode, decimalOrZero, truncateDecimals } from '../../util/utils.js'
 
 const logos = {
   eos: eosLogo,
@@ -36,8 +37,8 @@ export type CreateWalletAccountSelectStateProps = {
   paymentCurrencyCode: string,
   paymentAddress: string,
   exchangeAmount: string,
-  nativeAmount: string,
-  expirationDate: string,
+  amount: string,
+  expireTime: string,
   supportedCurrencies: { [string]: boolean },
   activationCost: string,
   isCreatingWallet: boolean,
@@ -64,7 +65,8 @@ type State = {
   walletId: string,
   isModalVisible: boolean,
   error: string,
-  createdWallet: Promise<EdgeCurrencyWallet>
+  createdWallet: Promise<EdgeCurrencyWallet>,
+  paymentCurrencyCode: string
 }
 
 export class CreateWalletAccountSelect extends Component<Props, State> {
@@ -77,7 +79,8 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       error: '',
       walletId: '',
       walletName: '',
-      createdWallet
+      createdWallet,
+      paymentCurrencyCode: ''
     }
     const currencyCode = props.selectedWalletType.currencyCode
     props.fetchAccountActivationInfo(currencyCode)
@@ -102,14 +105,15 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     createAccountTransaction(createdWalletId, accountName, walletId)
   }
 
-  onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
+  onSelectWallet = async (walletId: string, paymentCurrencyCode: string): mixed => {
     const { wallets, accountName, fetchWalletAccountActivationPaymentInfo } = this.props
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
     this.setState({
       isModalVisible: false,
       walletId,
-      walletName
+      walletName,
+      paymentCurrencyCode
     })
     const activatingWallet = await this.state.createdWallet
     const ownerPublicKey = activatingWallet.keys.ownerPublicKey
@@ -126,6 +130,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
 
   renderSelectWallet = () => {
     const { activationCost, selectedWalletType } = this.props
+    const roundedActivationCost = intl.formatNumber(decimalOrZero(truncateDecimals(activationCost, 6), 6))    
     const currencyCode = selectedWalletType.currencyCode
     return (
       <View style={styles.selectPaymentLower}>
@@ -137,7 +142,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
         <View style={styles.paymentArea}>
           <Text style={styles.paymentLeft}>{s.strings.create_wallet_account_amount_due}</Text>
           <Text style={styles.paymentRight}>
-            {activationCost} {currencyCode}
+            {roundedActivationCost} {currencyCode}
           </Text>
         </View>
       </View>
@@ -147,19 +152,20 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   renderPaymentReview = () => {
     const {
       wallets,
-      paymentCurrencyCode,
       accountName,
       isCreatingWallet,
-      exchangeAmount,
-      selectedWalletType,
+      amount, // amount of payment type (non-EOS)
+      paymentDenominationSymbol, // denomination symbol of payment type currency (non-EOS)
+      selectedWalletType, // account-based currency wallet being created (EOS)
       selectedFiat,
-      activationCost,
-      paymentDenominationSymbol
+      activationCost // amount of account-based currency required to activate
     } = this.props
-    const { walletId } = this.state
-    const wallet = wallets[walletId]
-    const { name, symbolImageDarkMono } = wallet
-
+    const { walletId, paymentCurrencyCode } = this.state
+    const wallet = wallets[walletId] // wallet to pay with (non-EOS)
+    const { name, symbolImageDarkMono } = wallet // name and logo of said wallet
+    const roundedActivationCost = intl.formatNumber(decimalOrZero(truncateDecimals(activationCost, 6), 6))
+    const roundedAmount = intl.formatNumber(decimalOrZero(truncateDecimals(amount, 6), 6))
+    const walletTypeToCreate = selectedWalletType.currencyCode // (EOS)
     return (
       <View>
         <View style={styles.selectPaymentLower}>
@@ -174,10 +180,10 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
-                {paymentDenominationSymbol} {exchangeAmount} {paymentCurrencyCode}
+                {paymentDenominationSymbol} {roundedAmount} {paymentCurrencyCode}
               </Text>
               <Text style={styles.paymentRight}>
-                {activationCost} {selectedWalletType.currencyCode}
+                {roundedActivationCost} {walletTypeToCreate}
               </Text>
             </View>
           </View>
@@ -210,7 +216,9 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
 
   render () {
     const { supportedCurrencies, selectedWalletType, activationCost } = this.props
-    const instructionSyntax = sprintf(s.strings.create_wallet_account_select_instructions, `${activationCost} ${selectedWalletType.currencyCode}`)
+    const roundedActivationCost = intl.formatNumber(decimalOrZero(truncateDecimals(activationCost, 6), 6))
+
+    const instructionSyntax = sprintf(s.strings.create_wallet_account_select_instructions, `${roundedActivationCost} ${selectedWalletType.currencyCode}`)
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
     // only included supported types of payment in WalletListModal
     const supportedCurrenciesList = []
@@ -237,7 +245,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
               topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
               type={Constants.FROM}
               onSelectWallet={this.onSelectWallet}
-              includedCurrencyCodes={supportedCurrenciesList}
+              includedCurrencyCodes={[]}
             />
           )}
         </View>

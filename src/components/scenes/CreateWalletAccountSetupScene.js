@@ -36,7 +36,8 @@ export type CreateWalletAccountSetupOwnProps = {
 }
 
 export type CreateWalletAccountSetupStateProps = {
-  isHandleAvailable: boolean,
+  isAvailable: boolean,
+  errorMessage: string,
   isCheckingHandleAvailability: boolean
 }
 
@@ -85,9 +86,9 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   }
 
   render () {
-    const { isCheckingHandleAvailability, isHandleAvailable } = this.props
-    const validityIcon = isHandleAvailable ? validIcon : invalidIcon
-
+    const { isCheckingHandleAvailability, isAvailable, errorMessage } = this.props
+    const validityIcon = isAvailable ? validIcon : invalidIcon
+    const translatedErrorMessage = s.strings[`create_wallet_account_${errorMessage}`]
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -109,7 +110,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
                   value={this.state.accountHandle}
                   returnKeyType={'next'}
                   onSubmitEditing={this.onSetup}
-                  error={''}
+                  error={!isAvailable ? translatedErrorMessage : ''}
                 />
                 <View style={{ width: scale(25), height: scale(25) }}>
                   {isCheckingHandleAvailability ? (
@@ -120,7 +121,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
                 </View>
               </View>
               <View style={styles.buttons}>
-                <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || !isHandleAvailable}>
+                <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || !isAvailable}>
                   <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
                 </PrimaryButton>
               </View>

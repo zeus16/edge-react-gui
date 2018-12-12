@@ -10,6 +10,7 @@ import type { AccountActivationPaymentInfo, HandleActivationInfo } from '../redu
 import { type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
+import { type AccountActivationPaymentInfoType, type IsHandleAvailableType } from '../actions/CreateWalletActions.js'
 
 type LegacyActionName =
   | 'OPEN_AB_ALERT'
@@ -218,7 +219,6 @@ export type Action =
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
-  | { type: 'IS_HANDLE_AVAILABLE', data: boolean }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
       data: {
@@ -248,3 +248,11 @@ export type Action =
         fee: string
       }
     }
+  | {
+    type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
+    data: AccountActivationPaymentInfoType
+  }
+  | {
+    type: 'IS_HANDLE_AVAILABLE',
+    data: IsHandleAvailableType
+  }

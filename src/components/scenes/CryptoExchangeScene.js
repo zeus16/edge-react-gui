@@ -59,7 +59,7 @@ export type CryptoExchangeSceneComponentStateProps = {
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
-  onSelectWallet(string, string): void,
+  onSelectWallet(string, string): mixed,
   openModal(data: 'from' | 'to'): mixed,
   getQuoteForTransaction(SetNativeAmountInfo): void,
   wipeKYCFlag: () => any
@@ -277,7 +277,7 @@ export class CryptoExchangeScene extends Component<Props, State> {
   renderDropUp = () => {
     const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet } = this.props
     const { whichWallet } = this.state
-    let excludedCurrencyCode = ''
+    let excludedCurrencyCode: string = ''
     // some complex logic because 'toCurrencyCode/fromCurrencyCode'
     // can be denomination (needs to change to actual currencyCode)
     if (whichWallet === Constants.TO) {

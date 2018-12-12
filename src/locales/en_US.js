@@ -142,6 +142,9 @@ const strings = {
   create_wallet_account_amount_due: 'Amount due:',
   create_wallet_account_handle_unavailable_modal_title: 'Account Handle Unavailable',
   create_wallet_account_handle_unavailable_modal_message: 'Your chosen account handle, %s, is unavailable now. Please use a different one to continue.',
+  create_wallet_account_ErrorInvalidAccountName: 'Invalid username',
+  create_wallet_account_ErrorAccountUnavailable: 'Username unavailable',
+  create_wallet_account_ErrorUnknownError: 'Unknown error. Please try again later.',
 
   submit: 'Submit',
   login: 'Login',
