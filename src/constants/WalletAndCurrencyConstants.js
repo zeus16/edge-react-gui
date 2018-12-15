@@ -96,6 +96,7 @@ export const FIAT_CODES_SYMBOLS = {
   HUF: 'Ft',
   IDR: 'Rp',
   ILS: '₪',
+  IMP: '£',
   INR: '₹',
   IQD: 'ع.د',
   IRR: '﷼',
