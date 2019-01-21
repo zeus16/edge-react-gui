@@ -14,6 +14,8 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
 #import <Firebase.h>
+#import "RNFirebaseNotifications.h"
+#import "RNFirebaseMessaging.h"
 
 @implementation AppDelegate
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
@@ -37,6 +39,9 @@
   NSURL *jsCodeLocation;
 
   [FIRApp configure];
+  [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
+  [RNFirebaseNotifications configure];
+  
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation

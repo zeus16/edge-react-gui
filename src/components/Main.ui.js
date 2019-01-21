@@ -24,7 +24,7 @@ import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
 import { coinbasePlugin, coincapPlugin, currencyconverterapiPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
-import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import { AsyncStorage, Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -250,9 +250,58 @@ async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, use
   }
 }
 
+async function checkPermission () {
+  if (global.firebase) {
+    try {
+      const enabled = await global.firebase.messaging().hasPermission()
+      if (enabled) {
+        getToken()
+      } else {
+        requestPermission()
+      }
+    } catch (e) {
+      console.log('checkPermissions failed with error', e)
+    }
+  }
+}
+
+async function getToken () {
+  if (global.firebase) {
+    let fcmToken
+    try {
+      fcmToken = await AsyncStorage.getItem('fcmToken')
+    } catch (e) {
+      console.log('AsyncStorage.getItem errored', e)
+    }
+    if (!fcmToken) {
+      global.firebase.messaging().getToken().then(token => {
+        return AsyncStorage.setItem('fcmToken', token)
+      }).catch(e => {
+        console.log('firebase getToken or storage.setItem errored', e)
+      })
+    }
+  }
+}
+
+async function requestPermission () {
+  if (global.firebase) {
+    try {
+      await global.firebase.messaging().requestPermission()
+      // User has authorized
+      getToken()
+    } catch (error) {
+      // User has rejected permissions
+      console.log('firebase messaging permission rejected', error)
+    }
+  }
+}
+
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any
   keyboardDidHideListener: any
+  notificationListener: any
+  notificationOpenedListener: any
+  onTokenRefreshListener: any
 
   constructor (props: Props) {
     super(props)
@@ -278,12 +327,24 @@ export default class Main extends Component<Props, State> {
   componentWillUnmount () {
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
+    this.notificationListener && this.notificationListener()
+    this.notificationOpenedListener && this.notificationOpenedListener()
   }
 
   componentDidMount () {
     const id = DeviceInfo.getUniqueID()
-    global.firebase && global.firebase.analytics().setUserId(id)
-    global.firebase && global.firebase.analytics().logEvent(`Start_App`)
+    if (global.firebase) {
+      global.firebase.analytics().setUserId(id)
+      global.firebase.analytics().logEvent(`Start_App`)
+      this.onTokenRefreshListener = global.firebase.messaging().onTokenRefresh(fcmToken => {
+        console.log('onTokenRefresh', fcmToken)
+      })
+      setTimeout(() => {
+        checkPermission()
+        this.createNotificationListeners()
+      }, 15000)
+    }
+
     makeCoreContext(pluginFactories).then(context => {
       const folder = makeReactNativeFolder()
 
@@ -899,5 +960,42 @@ export default class Main extends Component<Props, State> {
     }
     Actions.pop()
     return true
+  }
+
+  async createNotificationListeners () {
+    if (global.firebase) {
+      /*
+       * Triggered when a particular notification has been received in foreground
+       */
+      this.notificationListener = global.firebase.notifications().onNotification(notification => {
+        const { title, body } = notification
+        this.showAlert(title, body)
+      })
+
+      /*
+       * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+       */
+      this.notificationOpenedListener = global.firebase.notifications().onNotificationOpened(notificationOpen => {
+        const { title, body } = notificationOpen.notification
+        this.showAlert(title, body)
+      })
+
+      /*
+       * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
+       */
+      const notificationOpen = await global.firebase.notifications().getInitialNotification()
+      if (notificationOpen) {
+        const { title, body } = notificationOpen.notification
+        this.showAlert(title, body)
+      }
+
+      /*
+       * Triggered for data only payload in foreground
+       */
+      this.messageListener = global.firebase.messaging().onMessage(message => {
+        //  process data message
+        console.log(JSON.stringify(message))
+      })
+    }
   }
 }
