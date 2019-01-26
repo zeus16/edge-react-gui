@@ -42,30 +42,30 @@ pipeline {
       }
     }
 
-    stage ("Get version and build number") {
-      steps {
-        // Fix version for branchs that are not "master" or "develop"
-        script {
-          if (BRANCH_NAME == "master" || BRANCH_NAME == "develop") {
-            // Import the buildnums from previous build
-            step ([
-              $class: 'CopyArtifact',
-              projectName: "${JOB_NAME}",
-              selector: lastCompleted(),
-              optional: true
-            ])
-          }
-          def packageJson = readJSON file: "./package.json"
-          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
-            packageJson.version = "${packageJson.version}-${BRANCH_NAME}".inspect()
-            writeJSON file: "./package.json", json: packageJson
-          }
-          def description = "[version] ${packageJson.version}"
-          if (BRANCH_NAME == "develop") description += "-d"
-          currentBuild.description = description
-        }
-      }
-    }
+    // stage ("Get version and build number") {
+    //   steps {
+    //     // Fix version for branchs that are not "master" or "develop"
+    //     script {
+    //       if (BRANCH_NAME == "master" || BRANCH_NAME == "develop") {
+    //         // Import the buildnums from previous build
+    //         step ([
+    //           $class: 'CopyArtifact',
+    //           projectName: "${JOB_NAME}",
+    //           selector: lastCompleted(),
+    //           optional: true
+    //         ])
+    //       }
+    //       def packageJson = readJSON file: "./package.json"
+    //       if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
+    //         packageJson.version = "${packageJson.version}-${BRANCH_NAME}".inspect()
+    //         writeJSON file: "./package.json", json: packageJson
+    //       }
+    //       def description = "[version] ${packageJson.version}"
+    //       if (BRANCH_NAME == "develop") description += "-d"
+    //       currentBuild.description = description
+    //     }
+    //   }
+    // }
 
     stage ("Load credentials") {
       steps {
