@@ -44,10 +44,17 @@ pipeline {
 
     stage ("Get version and build number") {
       steps {
-        // Import the buildnums from previous build
-        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
         // Fix version for branchs that are not "master" or "develop"
         script {
+          if (BRANCH_NAME == "master" || BRANCH_NAME == "develop") {
+            // Import the buildnums from previous build
+            step ([
+              $class: 'CopyArtifact',
+              projectName: "${JOB_NAME}",
+              selector: lastCompleted(),
+              optional: true
+            ])
+          }
           def packageJson = readJSON file: "./package.json"
           if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
             packageJson.version = "${packageJson.version}-${BRANCH_NAME}".inspect()
