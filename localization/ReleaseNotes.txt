@@ -12,6 +12,7 @@ v.1.6.2
 * Fix metadata tagging of transactions to update immediately after saving
 * Improved syncing of XRP and ETH
 * Use multiple services to broadcast XRP and ETH transactions
+* Add Faa.st instant exchange provider
 
 v1.6.1
 
