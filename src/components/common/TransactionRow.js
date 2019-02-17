@@ -158,7 +158,11 @@ export class TransactionRowComponent extends Component<Props, State> {
           </View>
         )}
         <TouchableHighlight
-          onPress={() => this.props.onClick(tx, thumbnailPath)}
+          onPress={() => {
+            requestAnimationFrame(() => {
+              this.props.onClick(tx, thumbnailPath)
+            })
+          }}
           underlayColor={styleRaw.transactionUnderlay.color}
           style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
         >
