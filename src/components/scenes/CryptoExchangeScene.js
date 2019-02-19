@@ -53,6 +53,7 @@ export type CryptoExchangeSceneComponentStateProps = {
   forceUpdateGuiCounter: number,
   showWalletSelectModal: boolean,
   shiftPendingTransaction: boolean,
+  calculatingMax: boolean,
   showKYCAlert: boolean,
   pluginCompleteKYC: string | null,
   wallets: { [string]: GuiWallet }
@@ -228,7 +229,13 @@ export class CryptoExchangeScene extends Component<Props, State> {
     Alert.alert(s.strings.no_exchange_amount, s.strings.select_exchange_amount)
   }
   renderButton = () => {
-    if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {
+    if (this.props.calculatingMax) {
+      return (
+        <PrimaryButton>
+          <PrimaryButton.Text>{'Calculating Max...'}</PrimaryButton.Text>
+        </PrimaryButton>
+      )
+    } else if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {
       return (
         <PrimaryButton onPress={this.getQuote}>
           <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
