@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { newPin, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateAmount, updateSpendPending } from '../../actions/SendConfirmationActions.js'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
-import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
+import type { SendConfirmationDispatchProps, SendConfirmationRouterParams, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/Settings/selectors.js'
 import {
@@ -20,7 +20,7 @@ import {
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { convertNativeToExchange } from '../../util/utils'
 
-const mapStateToProps = (state: State): SendConfirmationStateProps => {
+const mapStateToProps = (state: State, ownProps: SendConfirmationRouterParams): SendConfirmationStateProps => {
   const sceneState = state.ui.scenes.sendConfirmation
   let fiatPerCrypto = 0
   let secondaryExchangeCurrencyCode = ''
@@ -41,7 +41,8 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
 
   const transaction = getTransaction(state)
   const pending = getPending(state)
-  const nativeAmount = sceneState.nativeAmount
+  // not certain whether ownProps or redux state should take precedence
+  const nativeAmount = ownProps.nativeAmount || sceneState.nativeAmount
   // const nativeAmount = getNativeAmount(state)
   let error = getError(state)
 

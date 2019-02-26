@@ -67,8 +67,9 @@ export type SendConfirmationDispatchProps = {
   uniqueIdentifierButtonPressed: () => void
 }
 
-type SendConfirmationRouterParams = {
-  guiMakeSpendInfo: GuiMakeSpendInfo
+export type SendConfirmationRouterParams = {
+  guiMakeSpendInfo: GuiMakeSpendInfo,
+  nativeAmount: string
 }
 
 type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendConfirmationRouterParams
