@@ -290,58 +290,27 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   }
 
   renderDropUp = (whichWallet: string) => {
-    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
+    const { onSelectWallet, wallets } = this.props
 
-    let excludedCurrencyCode = '' // should allow for multiple excluded currencyCodes
-    // some complex logic because 'toCurrencyCode/fromCurrencyCode'
-    // can be denomination (needs to change to actual currencyCode)
-    if (whichWallet === Constants.TO) {
-      if (fromWallet) {
-        if (fromWallet.enabledTokens.length > 1) {
-          // could be token
-          excludedCurrencyCode = fromCurrencyCode
-        } else {
-          excludedCurrencyCode = fromWallet.currencyCode
-        }
-      }
-    } else {
-      if (toWallet) {
-        if (toWallet.enabledTokens.length > 1) {
-          // could be token
-          excludedCurrencyCode = toCurrencyCode
-        } else {
-          excludedCurrencyCode = toWallet.currencyCode
-        }
-      }
-    }
     const walletCurrencyCodes = []
     const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
-      if (excludedCurrencyCode === wallet.currencyCode && excludedCurrencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
-        walletCurrencyCodes.push(wallet.currencyCode)
-        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-          allowedWallets.push(wallets[id])
-        }
-      }
-      if (excludedCurrencyCode !== wallet.currencyCode) {
-        walletCurrencyCodes.push(wallet.currencyCode)
-        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-          allowedWallets.push(wallets[id])
-        }
+      walletCurrencyCodes.push(wallet.currencyCode)
+      if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+        allowedWallets.push(wallets[id])
       }
     }
     const supportedWalletTypes = []
     for (let i = 0; i < this.props.supportedWalletTypes.length; i++) {
       const swt = this.props.supportedWalletTypes[i]
-      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS' && excludedCurrencyCode !== swt.currencyCode) {
+      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS') {
         supportedWalletTypes.push(swt)
       }
     }
     const props = {
       wallets: allowedWallets,
       supportedWalletTypes,
-      excludedCurrencyCode,
       showWalletCreators: whichWallet === Constants.TO,
       state: this.props.state,
       headerTitle: whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
