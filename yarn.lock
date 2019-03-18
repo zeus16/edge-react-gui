@@ -3181,10 +3181,9 @@ edge-components@^0.0.19:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.15.8:
+"edge-core-js@git://github.com/EdgeApp/edge-core-js#298e4f4":
   version "0.15.8"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.15.8.tgz#81a30abc7dd2fa7b1a26e7dd05a807483a38ebc0"
-  integrity sha512-wOcKtCc+E4VMME2g8ykyWU3hi0SQtKiRgJ/U9O6pwkRnjaYsmFfe/ARgb49eM3ySMQ36m8w9/pWDvBw5r6sn+A==
+  resolved "git://github.com/EdgeApp/edge-core-js#298e4f4d6cc2b304d3e0910be1d0dce97985c7be"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3228,10 +3227,9 @@ edge-currency-accountbased@^0.1.7:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@4.0.2:
+"edge-currency-bitcoin@git://github.com/EdgeApp/edge-currency-bitcoin#1efac88":
   version "4.0.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.0.2.tgz#50f814d59b40bef1a12fe9ed9d1fd7b6f124a86b"
-  integrity sha512-Volatka06WATkE0tppYw22cV9lxLAU0LX72TO9pVUOQUygHub19XQ6D4A/pK60wNN+yMAkSt1kS+VLwGYfbKkQ==
+  resolved "git://github.com/EdgeApp/edge-currency-bitcoin#1efac886341a8396ddf4ac092252a50a6942fbc2"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -8239,10 +8237,9 @@ react-native-firebase@4.3.8:
   version "1.0.5"
   resolved "git://github.com/EdgeApp/react-native-flip-view.git#9796c6469385559da6689a4f56f540fc6f3d003a"
 
-react-native-fs@^2.11.15:
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.12.1.tgz#55ec15392eb39e9fa9d6628c2c5b60b9f59102b7"
-  integrity sha512-T0vR5c+3fPVr12o4UoKr+gMHVokbLmKFGg2x1rOprwjaoJpV75Tw8mC3RpUp1u9AZHzWC4WcomhfqAlfXqDUug==
+"react-native-fs@git://github.com/EdgeApp/react-native-fs#575a037":
+  version "2.13.3"
+  resolved "git://github.com/EdgeApp/react-native-fs#575a0376ac7287f2048ee470e2af5ad3aeb65764"
   dependencies:
     base-64 "^0.1.0"
     utf8 "^2.1.1"

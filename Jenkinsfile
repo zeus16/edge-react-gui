@@ -46,15 +46,16 @@ pipeline {
       steps {
         // Import the buildnums from previous build
         copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
-        // Fix version for branchs that are not "master" or "develop"
+        // Fix version for branchs that are not "master" or "develop" or "test"
         script {
           def packageJson = readJSON file: "./package.json"
-          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
+          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop" && BRANCH_NAME != "test") {
             packageJson.version = "${packageJson.version}-${BRANCH_NAME}".inspect()
             writeJSON file: "./package.json", json: packageJson
           }
           def description = "[version] ${packageJson.version}"
           if (BRANCH_NAME == "develop") description += "-d"
+          if (BRANCH_NAME == "test") description += "-t"
           currentBuild.description = description
         }
       }
@@ -97,6 +98,7 @@ pipeline {
         anyOf {
           branch 'master'
           branch 'develop'
+          branch 'test'
         }
       }
       parallel {
