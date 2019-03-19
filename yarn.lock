@@ -8209,6 +8209,11 @@ react-native-easy-grid@0.2.0:
   dependencies:
     lodash "^4.11.1"
 
+react-native-embrace@^1.0.13:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/react-native-embrace/-/react-native-embrace-1.0.13.tgz#825b4f1fce4d8b43e2fbd29513a2e43027838c26"
+  integrity sha512-umoTfxYemEf7k75Zh729708MKxZezWrXIoRV7wz06PcfvdvGRx/348vcty3u13IF9ABwFG2E4qfwvVjOBZ46vw==
+
 "react-native-extra-dimensions-android@git://github.com/EdgeApp/react-native-extra-dimensions-android.git":
   version "0.17.0"
   resolved "git://github.com/EdgeApp/react-native-extra-dimensions-android.git#4e1c03f0c5ee3dc26d820d3980796ac41eb51528"

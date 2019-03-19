@@ -9,6 +9,8 @@ import { fetchLoginMessages } from 'edge-core-js'
 import React, { Component } from 'react'
 import { AsyncStorage, Platform, Text, TextInput } from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
+// $FlowFixMe
+import { endAppStartup } from 'react-native-embrace'
 import firebase from 'react-native-firebase'
 import RNFS from 'react-native-fs'
 import PushNotification from 'react-native-push-notification'
@@ -226,5 +228,9 @@ export default class App extends Component<{}> {
         <Main />
       </Provider>
     )
+  }
+
+  componentDidMount () {
+    endAppStartup()
   }
 }

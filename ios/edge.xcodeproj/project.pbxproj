@@ -65,6 +65,8 @@
 		D6181FED10025926C9F176BD /* libPods-edge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */; };
 		DA22C55F2124FB1600B2F007 /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA22C55E2124F82E00B2F007 /* libBugsnagReactNative.a */; };
 		DA22C68E2125003C00B2F007 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA89DDF620F2CF670012B4BD /* libRNFirebase.a */; };
+		DA0B644F223BC51D00AE61C9 /* EmbraceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0B644E223BC51D00AE61C9 /* EmbraceManager.m */; };
+		DA0B64BA223BDDDD00AE61C9 /* Embrace-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA0B6475223BDDDD00AE61C9 /* Embrace-Info.plist */; };
 		DA22C6F8212501B100B2F007 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E1091461EB0512200947A0B /* libRNFS.a */; };
 		DA22C739212501CE00B2F007 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A815B621F84B4AA003D8190 /* libRNRandomBytes.a */; };
 		DA22C7432125021A00B2F007 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA22C7402125021100B2F007 /* libRNDeviceInfo.a */; };
@@ -710,6 +712,9 @@
 		D4734E70511C4A4EA9A26574 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		D508A63DA69244B691ABB3A5 /* AbcCoreJsUi.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AbcCoreJsUi.xcodeproj; path = "../node_modules/edge-login-ui-rn/ios/AbcCoreJsUi.xcodeproj"; sourceTree = "<group>"; };
 		D8A4F000025E4FB6B7D895BB /* RNMail.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNMail.xcodeproj; path = "../node_modules/react-native-mail/RNMail.xcodeproj"; sourceTree = "<group>"; };
+		DA0B644D223BC51D00AE61C9 /* EmbraceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmbraceManager.h; path = embrace/EmbraceManager.h; sourceTree = SOURCE_ROOT; };
+		DA0B644E223BC51D00AE61C9 /* EmbraceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmbraceManager.m; path = embrace/EmbraceManager.m; sourceTree = SOURCE_ROOT; };
+		DA0B6475223BDDDD00AE61C9 /* Embrace-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Embrace-Info.plist"; path = "embrace/Embrace-Info.plist"; sourceTree = SOURCE_ROOT; };
 		DA22C5512124F60100B2F007 /* libBugsnagStatic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libBugsnagStatic.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA22C5592124F82E00B2F007 /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
 		DA22C73A2125021100B2F007 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
@@ -886,6 +891,7 @@
 		13B07FAE1A68108700A75B9A /* edge */ = {
 			isa = PBXGroup;
 			children = (
+				DA0B6408223BC50100AE61C9 /* embrace */,
 				DA89DDF720F2CFD70012B4BD /* GoogleService-Info.plist */,
 				E682D9AD200DF9A70042F9BA /* edge.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -1212,6 +1218,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DA0B6408223BC50100AE61C9 /* embrace */ = {
+			isa = PBXGroup;
+			children = (
+				DA0B6475223BDDDD00AE61C9 /* Embrace-Info.plist */,
+				DA0B644D223BC51D00AE61C9 /* EmbraceManager.h */,
+				DA0B644E223BC51D00AE61C9 /* EmbraceManager.m */,
+			);
+			name = embrace;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		DA22C73B2125021100B2F007 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1375,6 +1392,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				745E04EB7DD4736B2997CD5F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2161,6 +2179,7 @@
 				9958B956282245938D6C6898 /* AntDesign.ttf in Resources */,
 				492BBE74AA384E29A8AB2F44 /* FontAwesome5_Brands.ttf in Resources */,
 				D2ABB4584F0842688F83A019 /* FontAwesome5_Regular.ttf in Resources */,
+				DA0B64BA223BDDDD00AE61C9 /* Embrace-Info.plist in Resources */,
 				319D7141C5F34FAFAB916A0D /* FontAwesome5_Solid.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2181,6 +2200,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		745E04EB7DD4736B2997CD5F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-edge/Pods-edge-frameworks.sh",
+				"${PODS_ROOT}/EmbraceIO/Embrace.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Embrace.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-edge/Pods-edge-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		87B486B70BE20E76388C9872 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2208,6 +2245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA93C74E2128A90A00178601 /* RNBackgroundFetch+AppDelegate.m in Sources */,
+				DA0B644F223BC51D00AE61C9 /* EmbraceManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);

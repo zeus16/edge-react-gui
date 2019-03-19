@@ -1,4 +1,5 @@
 PODS:
+  - EmbraceIO (3.1.2)
   - Firebase/Core (5.3.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 5.0.1)
@@ -23,10 +24,12 @@ PODS:
   - nanopb/encode (0.3.8)
 
 DEPENDENCIES:
+  - EmbraceIO
   - Firebase/Core (~> 5.3.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - EmbraceIO
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -35,6 +38,7 @@ SPEC REPOS:
     - nanopb
 
 SPEC CHECKSUMS:
+  EmbraceIO: d4d940679e4860568187dc0eed9d155925acbc5b
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
@@ -42,6 +46,6 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
 
-PODFILE CHECKSUM: 8da40ca8d52df737cfb333d4311ec5524cd28a60
+PODFILE CHECKSUM: e60f706e2a67f5d117633a5ccab4edc753a8c002
 
 COCOAPODS: 1.5.3

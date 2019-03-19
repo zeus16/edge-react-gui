@@ -14,6 +14,7 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
 #import <Firebase.h>
+#import <Embrace/Embrace.h>
 
 @implementation AppDelegate
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
@@ -56,6 +57,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [[Embrace sharedInstance] startWithKey:@"YTR7a"];
   return YES;
 }
 // Required to register for notifications

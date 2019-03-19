@@ -4,6 +4,8 @@ import android.app.Application;
 import android.webkit.WebView;
 
 import com.facebook.react.ReactApplication;
+import io.embrace.embracewrapper.EmbraceManagerPackage;
+import io.embrace.android.embracesdk.Embrace; // Add the import line
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.krazylabs.OpenAppSettingsPackage;
@@ -56,6 +58,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new EmbraceManagerPackage(),
             new RNCWebViewPackage(),
             new CookieManagerPackage(),
             new OpenAppSettingsPackage(),
@@ -104,6 +107,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
 
+    Embrace.getInstance().start(this); // Add this line right after the 
     //Disable RTL
     I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
     sharedI18nUtilInstance.allowRTL(getApplicationContext(), false);

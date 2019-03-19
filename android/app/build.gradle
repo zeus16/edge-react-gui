@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-
+apply plugin: 'embrace-swazzler' 
 import com.android.build.OutputFile
 
 /**
@@ -98,6 +98,12 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
+    embrace {
+        // Replace with your APP_ID, which is a 5-character value, e.g. "aBc45" and the token
+        appId = 'b6CCM'
+        apiToken = '8260d99594844cbcbbd54f0c6600014b'
+    }
+    
     defaultConfig {
         applicationId "co.edgesecure.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -171,6 +177,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-embrace')
     compile project(':react-native-webview')
     compile project(':react-native-cookies')
     compile project(':react-native-app-settings')

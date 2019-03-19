@@ -21,6 +21,7 @@
 .*/node_modules/react-native-device-info/.*
 .*/node_modules/react-native-dropdown/.*
 .*/node_modules/react-native-dropdownalert/.*
+.*/node_modules/react-native-embrace/.*
 .*/node_modules/react-native-experimental-navigation/.*
 .*/node_modules/react-native-linear-gradient/.*
 .*/node_modules/react-navigation/.*
