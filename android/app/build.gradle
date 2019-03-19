@@ -74,7 +74,9 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    extraPackagerArgs: ["--sourcemap-output", "android-release.bundle.map"]
+    extraPackagerArgs: ["--sourcemap-output", "android-release.bundle.map", "--indexed-ram-bundle"],
+    bundleCommand: "ram-bundle",
+    bundleConfig: "packager/config.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"

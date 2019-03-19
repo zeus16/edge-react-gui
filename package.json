@@ -39,6 +39,7 @@
     "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
+    "ram": "node node_modules/react-native/local-cli/cli.js start --config ../../../../packager/config.js",
     "test": "jest",
     "test:e2e": "detox test -c ios.sim.debug",
     "test:e2e:build": "detox build",
