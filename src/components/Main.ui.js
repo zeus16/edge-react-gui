@@ -1,7 +1,6 @@
 // @flow
 
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
-import { ModalManager } from 'edge-components'
 import type { EdgeContext } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
@@ -38,25 +37,15 @@ import { scale } from '../lib/scaling.js'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
 import * as CONTEXT_API from '../modules/Core/Context/api'
-import DeepLinkingManager from '../modules/DeepLinkingManager.js'
-import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
-import AutoLogout from '../modules/UI/components/AutoLogout/AutoLogoutConnector'
-import { ContactsLoaderConnecter as ContactsLoader } from '../modules/UI/components/ContactsLoader/indexContactsLoader.js'
-import ErrorAlert from '../modules/UI/components/ErrorAlert/ErrorAlertConnector'
 import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
 import HelpButton from '../modules/UI/components/Header/Component/HelpButtonConnector'
 import Header from '../modules/UI/components/Header/Header.ui'
 import WalletName from '../modules/UI/components/Header/WalletName/WalletNameConnector.js'
-import HelpModal from '../modules/UI/components/HelpModal/index'
 import { LoadingScene } from '../modules/UI/components/Loading/LoadingScene.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
-import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
-import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import TransactionAlert from '../modules/UI/components/TransactionAlert/TransactionAlertConnector'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
-import { EdgeCoreManager } from './core/EdgeCoreManager.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -190,17 +179,30 @@ let TransactionListConnector = null
 let TransactionsExportSceneConnector = null
 let WalletList = null
 
-let ControlPanel
-let PluginBuySell
-let PluginSpend
-let PluginView
-let renderPluginBackButton
+let ControlPanel = null
+let PluginBuySell = null
+let PluginSpend = null
+let PluginView = null
+let renderPluginBackButton = null
 
-let CreateWalletName
-let CryptoExchangeQuoteProcessingScreenComponent
-let TermsOfServiceComponent
-let ExchangeSettingsConnector
-let CreateWalletChoiceComponent
+let CreateWalletName = null
+let CryptoExchangeQuoteProcessingScreenComponent = null
+let TermsOfServiceComponent = null
+let ExchangeSettingsConnector = null
+let CreateWalletChoiceComponent = null
+let HelpModal = null
+let ErrorAlert = null
+let TransactionAlert = null
+let AutoLogout = null
+let ContactsLoader = null
+let PasswordRecoveryReminderModalConnector = null
+let passwordReminderModalConnector = null
+let ModalManager = null
+let PermissionsManager = null
+let PermissionStrings = null
+
+let EdgeCoreManager = null
+let DeepLinkingManager = null
 
 export default class Main extends Component<Props> {
   keyboardDidShowListener: any
@@ -765,9 +767,72 @@ export default class Main extends Component<Props> {
                 onLeft={Actions.pop}
               />
             </Stack>
+            <Stack key={Constants.TRANSACTION_DETAILS}>
+              <Scene
+                  key={Constants.TRANSACTION_DETAILS}
+                  navTransparent={true}
+                  onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
+                  clone
+                  component={TransactionDetails}
+                  renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
+                  renderLeftButton={this.renderBackButton()}
+                  renderRightButton={this.renderMenuButton()}
+                />
+            </Stack>
           </Scene>
         </Drawer>
       )
+    } else {
+      return null
+    }
+  }
+
+  renderRouterUtils = () => {
+    const { isLoaded } = this.state
+    if (isLoaded) {
+      HelpModal = require('../modules/UI/components/HelpModal/index').default
+      ErrorAlert = require('../modules/UI/components/ErrorAlert/ErrorAlertConnector').default
+      TransactionAlert = require('../modules/UI/components/TransactionAlert/TransactionAlertConnector').default
+      AutoLogout = require('../modules/UI/components/AutoLogout/AutoLogoutConnector').default
+      ContactsLoader =  require('../modules/UI/components/ContactsLoader/indexContactsLoader.js').ContactsLoaderConnecter
+      PasswordRecoveryReminderModalConnector = require('../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js').PasswordRecoveryReminderModalConnector
+      PasswordReminderModal = require('../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js').passwordReminderModalConnector
+      ModalManager = require('edge-components').ModalManager
+      PermissionsManager = require('../modules/PermissionsManager.js').default
+      PermissionStrings = require('../modules/PermissionsManager.js').PermissionStrings
+      return (
+        <View>
+          <HelpModal style={{ flex: 1 }} />
+          <ErrorAlert />
+          <TransactionAlert />
+          <AutoLogout />
+          <ContactsLoader />
+          <PasswordReminderModal />
+          <PasswordRecoveryReminderModalConnector />
+          <ModalManager />
+          <PermissionsManager />
+        </View>
+      )
+    } else {
+      return null
+    }
+  }
+
+  renderCoreManager = () => {
+    const { isLoaded } = this.state
+    if (isLoaded) {
+      EdgeCoreManager = require('./core/EdgeCoreManager.js').EdgeCoreManager
+      return <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />
+    } else {
+      return null
+    }
+  }
+
+  renderDeepLinkingManager = () => {
+    const { isLoaded } = this.state
+    if (isLoaded) {
+      DeepLinkingManager = require('../modules/DeepLinkingManager.js').default
+      return <DeepLinkingManager />
     } else {
       return null
     }
@@ -784,34 +849,16 @@ export default class Main extends Component<Props> {
                 <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
                 <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
-                <Scene
-                  key={Constants.TRANSACTION_DETAILS}
-                  navTransparent={true}
-                  onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
-                  clone
-                  component={TransactionDetails}
-                  renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
-                  renderLeftButton={this.renderBackButton()}
-                  renderRightButton={this.renderMenuButton()}
-                />
+
                 {this.renderGuiScenes()}
               </Stack>
             </Modal>
           </Overlay>
         </RouterWithRedux>
-        <HelpModal style={{ flex: 1 }} />
-        <ErrorAlert />
-        <TransactionAlert />
-        <AutoLogout />
-        <ContactsLoader />
-        <PasswordReminderModal />
-        <PasswordRecoveryReminderModalConnector />
-        <ModalManager />
-        <PermissionsManager />
+        {this.renderRouterUtils()}
+        {this.renderCoreManager()}
+        {this.renderDeepLinkingManager()}
 
-        <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />
-
-        <DeepLinkingManager />
       </MenuProvider>
     )
   }
