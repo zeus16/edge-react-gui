@@ -16,6 +16,6 @@ const waitingModuleNames = moduleIds.filter(moduleId => !modules[moduleId].isIni
 console.log('loaded:', loadedModuleNames.length, 'waiting:', waitingModuleNames.length)
 
 // grab this text blob, and put it in a file named packager/modulePaths.js
-console.log(loadedModuleNames.sort())
+console.log(JSON.stringify(loadedModuleNames.sort()))
 
 AppRegistry.registerComponent(appName, () => App)
