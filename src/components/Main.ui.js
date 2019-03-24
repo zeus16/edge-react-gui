@@ -3,7 +3,7 @@
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
 import type { EdgeContext } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import { Alert, Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox, Text } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -196,7 +196,7 @@ let TransactionAlert = null
 let AutoLogout = null
 let ContactsLoader = null
 let PasswordRecoveryReminderModalConnector = null
-let passwordReminderModalConnector = null
+let PasswordReminderModal = null
 let ModalManager = null
 let PermissionsManager = null
 let PermissionStrings = null
@@ -214,18 +214,6 @@ export default class Main extends Component<Props> {
     this.state = {
       isLoaded: true
     }
-    if (ENV.HIDE_IS_MOUNTED) {
-      YellowBox.ignoreWarnings([
-        'Warning: isMounted(...) is deprecated',
-        'Module RCTImageLoader',
-        'The scalesPageToFit property is not supported when useWebKit = true'
-      ])
-    }
-  }
-
-  UNSAFE_componentWillMount () {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
   }
 
   componentWillUnmount () {
@@ -237,7 +225,8 @@ export default class Main extends Component<Props> {
     const id = DeviceInfo.getUniqueID()
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
-
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
     Linking.getInitialURL()
       .then(url => {
         if (url) {
@@ -247,6 +236,13 @@ export default class Main extends Component<Props> {
       })
       .catch(e => console.log(e))
     Linking.addEventListener('url', this.handleOpenURL)
+    if (ENV.HIDE_IS_MOUNTED) {
+      YellowBox.ignoreWarnings([
+        'Warning: isMounted(...) is deprecated',
+        'Module RCTImageLoader',
+        'The scalesPageToFit property is not supported when useWebKit = true'
+      ])
+    }
     this.setState({
       isLoaded: true
     })
@@ -354,8 +350,227 @@ export default class Main extends Component<Props> {
     this.props.updateCurrentSceneKey(Constants.REQUEST)
   }
 
-  renderGuiScenes = () => {
+  renderCoreManager = () => {
     const { isLoaded } = this.state
+    if (isLoaded) {
+      EdgeCoreManager = require('./core/EdgeCoreManager.js').EdgeCoreManager
+      return <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />
+    } else {
+      return null
+    }
+  }
+
+  renderDeepLinkingManager = () => {
+    const { isLoaded } = this.state
+    if (isLoaded) {
+      DeepLinkingManager = require('../modules/DeepLinkingManager.js').default
+      return <DeepLinkingManager />
+    } else {
+      return null
+    }
+  }
+
+  render () {
+    return (
+      <MenuProvider style={styles.mainMenuContext}>
+        <RouterWithRedux backAndroidHandler={this.handleBack}>
+          <Overlay>
+            <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
+              {/* <Lightbox> */}
+              <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
+                <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
+
+                <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
+
+                {this.state.isLoaded && <GuiScenes isLoaded />}
+              </Stack>
+            </Modal>
+          </Overlay>
+        </RouterWithRedux>
+        {this.state.isLoaded && <RouterUtils isLoaded />}
+        {this.renderCoreManager()}
+        {this.renderDeepLinkingManager()}
+
+      </MenuProvider>
+    )
+  }
+
+  renderCurrencySettings = () => {
+    const settings = []
+    for (const key in Constants.CURRENCY_SETTINGS) {
+      const { pluginName, currencyCode } = Constants.CURRENCY_SETTINGS[key]
+      settings.push(
+        <Scene
+          key={key}
+          pluginName={pluginName}
+          currencyCode={currencyCode}
+          navTransparent={true}
+          component={CurrencySettings}
+          renderTitle={
+            <View style={styles.titleWrapper}>
+              <CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />
+            </View>
+          }
+          renderLeftButton={this.renderBackButton()}
+          renderRightButton={this.renderEmptyButton()}
+        />
+      )
+    }
+    return settings
+  }
+
+  renderWalletListNavBar = () => {
+    return <Header />
+  }
+
+  renderWalletName = () => {
+    return (
+      <View style={styles.titleWrapper}>
+        <WalletName />
+      </View>
+    )
+  }
+
+  renderEmptyButton = () => {
+    return <BackButton />
+  }
+
+  renderHelpButton = () => {
+    return <HelpButton />
+  }
+
+  renderBackButton = (label: string = BACK) => {
+    return <BackButton withArrow onPress={this.handleBack} label={label} />
+  }
+
+  renderTitle = (title: string) => {
+    return (
+      <View style={styles.titleWrapper}>
+        <T style={styles.titleStyle}>{title}</T>
+      </View>
+    )
+  }
+  renderSpendTitle = (title: string) => {
+    return (
+      <View style={styles.titleWrapper}>
+        <T style={styles.titleStyle}>{'title'}</T>
+      </View>
+    )
+  }
+
+  renderMenuButton = () => {
+    return (
+      <TouchableWithoutFeedback onPress={this.props.openDrawer}>
+        <Image source={MenuIcon} />
+      </TouchableWithoutFeedback>
+    )
+  }
+
+  renderExchangeButton = () => {
+    return <ExchangeDropMenu />
+  }
+
+  renderRequestMenuButton = () => {
+    return <RequestDropMenu />
+  }
+
+  renderSendConfirmationButton = () => {
+    return <SendConfirmationOptions />
+  }
+
+  icon = (tabName: string) => (props: { focused: boolean }) => {
+    if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
+      throw new Error('Invalid tabbar name')
+    }
+    let imageFile
+    if (props.focused) {
+      imageFile = tabBarIconFilesSelected[tabName]
+    } else {
+      imageFile = tabBarIconFiles[tabName]
+    }
+    return <Image source={imageFile} />
+  }
+
+  keyboardDidShow = (event: any) => {
+    const keyboardHeight = event.endCoordinates.height
+    this.props.setKeyboardHeight(keyboardHeight)
+  }
+
+  keyboardDidHide = () => {
+    this.props.setKeyboardHeight(0)
+  }
+
+  isCurrentScene = (sceneKey: string) => {
+    return Actions.currentScene === sceneKey
+  }
+
+  handleBack = () => {
+    if (this.isCurrentScene(Constants.LOGIN)) {
+      return false
+    }
+    if (this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
+      return HwBackButtonHandler()
+    }
+    if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
+      Actions.popTo(Constants.EXCHANGE_SCENE)
+      return true
+    }
+    Actions.pop()
+    return true
+  }
+}
+
+class Kylan extends Component<{}> {
+  componentDidMount = () => {
+    SplashScreen.close({
+      animationType: SplashScreen.animationType.fade,
+      duration: 850,
+      delay: 500
+    })
+  }
+  render () {
+    return (
+      <View><Text>Kylan</Text></View>
+    )
+  }
+}
+
+class RouterUtils extends Component <{}> {
+  render () {
+    const { isLoaded } = this.props
+    if (isLoaded) {
+      HelpModal = require('../modules/UI/components/HelpModal/index').default
+      ErrorAlert = require('../modules/UI/components/ErrorAlert/ErrorAlertConnector').default
+      TransactionAlert = require('../modules/UI/components/TransactionAlert/TransactionAlertConnector').default
+      AutoLogout = require('../modules/UI/components/AutoLogout/AutoLogoutConnector').default
+      ContactsLoader = require('../modules/UI/components/ContactsLoader/indexContactsLoader.js').ContactsLoaderConnecter
+      PasswordRecoveryReminderModalConnector = require('../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js').PasswordRecoveryReminderModalConnector
+      PasswordReminderModal = require('../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js').passwordReminderModalConnector
+      ModalManager = require('edge-components').ModalManager
+      PermissionsManager = require('../modules/PermissionsManager.js').default
+      PermissionStrings = require('../modules/PermissionsManager.js').PermissionStrings
+      return (
+        <View>
+          <HelpModal style={{ flex: 1 }} />
+          <ErrorAlert />
+          <TransactionAlert />
+          <AutoLogout />
+          <ContactsLoader />
+          <PasswordReminderModal />
+          <PasswordRecoveryReminderModalConnector />
+          <ModalManager />
+          <PermissionsManager />
+        </View>
+      )
+    } else {
+      return null
+    }
+  }
+}
+
+class GuiScenes extends Component <{}> {
+  render = () => {
+    const { isLoaded } = this.props
     if (isLoaded) {
       Scan = require('../connectors/scenes/ScanConnector').default
       SendConfirmation = require('../connectors/scenes/SendConfirmationConnector.js').default
@@ -769,15 +984,15 @@ export default class Main extends Component<Props> {
             </Stack>
             <Stack key={Constants.TRANSACTION_DETAILS}>
               <Scene
-                  key={Constants.TRANSACTION_DETAILS}
-                  navTransparent={true}
-                  onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
-                  clone
-                  component={TransactionDetails}
-                  renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
-                  renderLeftButton={this.renderBackButton()}
-                  renderRightButton={this.renderMenuButton()}
-                />
+                key={Constants.TRANSACTION_DETAILS}
+                navTransparent={true}
+                onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
+                clone
+                component={TransactionDetails}
+                renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
+                renderLeftButton={this.renderBackButton()}
+                renderRightButton={this.renderMenuButton()}
+              />
             </Stack>
           </Scene>
         </Drawer>
@@ -785,205 +1000,5 @@ export default class Main extends Component<Props> {
     } else {
       return null
     }
-  }
-
-  renderRouterUtils = () => {
-    const { isLoaded } = this.state
-    if (isLoaded) {
-      HelpModal = require('../modules/UI/components/HelpModal/index').default
-      ErrorAlert = require('../modules/UI/components/ErrorAlert/ErrorAlertConnector').default
-      TransactionAlert = require('../modules/UI/components/TransactionAlert/TransactionAlertConnector').default
-      AutoLogout = require('../modules/UI/components/AutoLogout/AutoLogoutConnector').default
-      ContactsLoader =  require('../modules/UI/components/ContactsLoader/indexContactsLoader.js').ContactsLoaderConnecter
-      PasswordRecoveryReminderModalConnector = require('../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js').PasswordRecoveryReminderModalConnector
-      PasswordReminderModal = require('../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js').passwordReminderModalConnector
-      ModalManager = require('edge-components').ModalManager
-      PermissionsManager = require('../modules/PermissionsManager.js').default
-      PermissionStrings = require('../modules/PermissionsManager.js').PermissionStrings
-      return (
-        <View>
-          <HelpModal style={{ flex: 1 }} />
-          <ErrorAlert />
-          <TransactionAlert />
-          <AutoLogout />
-          <ContactsLoader />
-          <PasswordReminderModal />
-          <PasswordRecoveryReminderModalConnector />
-          <ModalManager />
-          <PermissionsManager />
-        </View>
-      )
-    } else {
-      return null
-    }
-  }
-
-  renderCoreManager = () => {
-    const { isLoaded } = this.state
-    if (isLoaded) {
-      EdgeCoreManager = require('./core/EdgeCoreManager.js').EdgeCoreManager
-      return <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />
-    } else {
-      return null
-    }
-  }
-
-  renderDeepLinkingManager = () => {
-    const { isLoaded } = this.state
-    if (isLoaded) {
-      DeepLinkingManager = require('../modules/DeepLinkingManager.js').default
-      return <DeepLinkingManager />
-    } else {
-      return null
-    }
-  }
-
-  render () {
-    return (
-      <MenuProvider style={styles.mainMenuContext}>
-        <RouterWithRedux backAndroidHandler={this.handleBack}>
-          <Overlay>
-            <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
-              {/* <Lightbox> */}
-              <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
-                <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
-
-                <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
-
-                {this.renderGuiScenes()}
-              </Stack>
-            </Modal>
-          </Overlay>
-        </RouterWithRedux>
-        {this.renderRouterUtils()}
-        {this.renderCoreManager()}
-        {this.renderDeepLinkingManager()}
-
-      </MenuProvider>
-    )
-  }
-
-  renderCurrencySettings = () => {
-    const settings = []
-    for (const key in Constants.CURRENCY_SETTINGS) {
-      const { pluginName, currencyCode } = Constants.CURRENCY_SETTINGS[key]
-      settings.push(
-        <Scene
-          key={key}
-          pluginName={pluginName}
-          currencyCode={currencyCode}
-          navTransparent={true}
-          component={CurrencySettings}
-          renderTitle={
-            <View style={styles.titleWrapper}>
-              <CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />
-            </View>
-          }
-          renderLeftButton={this.renderBackButton()}
-          renderRightButton={this.renderEmptyButton()}
-        />
-      )
-    }
-    return settings
-  }
-
-  renderWalletListNavBar = () => {
-    return <Header />
-  }
-
-  renderWalletName = () => {
-    return (
-      <View style={styles.titleWrapper}>
-        <WalletName />
-      </View>
-    )
-  }
-
-  renderEmptyButton = () => {
-    return <BackButton />
-  }
-
-  renderHelpButton = () => {
-    return <HelpButton />
-  }
-
-  renderBackButton = (label: string = BACK) => {
-    return <BackButton withArrow onPress={this.handleBack} label={label} />
-  }
-
-  renderTitle = (title: string) => {
-    return (
-      <View style={styles.titleWrapper}>
-        <T style={styles.titleStyle}>{title}</T>
-      </View>
-    )
-  }
-  renderSpendTitle = (title: string) => {
-    return (
-      <View style={styles.titleWrapper}>
-        <T style={styles.titleStyle}>{'title'}</T>
-      </View>
-    )
-  }
-
-  renderMenuButton = () => {
-    return (
-      <TouchableWithoutFeedback onPress={this.props.openDrawer}>
-        <Image source={MenuIcon} />
-      </TouchableWithoutFeedback>
-    )
-  }
-
-  renderExchangeButton = () => {
-    return <ExchangeDropMenu />
-  }
-
-  renderRequestMenuButton = () => {
-    return <RequestDropMenu />
-  }
-
-  renderSendConfirmationButton = () => {
-    return <SendConfirmationOptions />
-  }
-
-  icon = (tabName: string) => (props: { focused: boolean }) => {
-    if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
-      throw new Error('Invalid tabbar name')
-    }
-    let imageFile
-    if (props.focused) {
-      imageFile = tabBarIconFilesSelected[tabName]
-    } else {
-      imageFile = tabBarIconFiles[tabName]
-    }
-    return <Image source={imageFile} />
-  }
-
-  keyboardDidShow = (event: any) => {
-    const keyboardHeight = event.endCoordinates.height
-    this.props.setKeyboardHeight(keyboardHeight)
-  }
-
-  keyboardDidHide = () => {
-    this.props.setKeyboardHeight(0)
-  }
-
-  isCurrentScene = (sceneKey: string) => {
-    return Actions.currentScene === sceneKey
-  }
-
-  handleBack = () => {
-    if (this.isCurrentScene(Constants.LOGIN)) {
-      return false
-    }
-    if (this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
-      return HwBackButtonHandler()
-    }
-    if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
-      Actions.popTo(Constants.EXCHANGE_SCENE)
-      return true
-    }
-    Actions.pop()
-    return true
   }
 }
