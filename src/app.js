@@ -7,16 +7,16 @@ import './util/polyfills'
 import { Client } from 'bugsnag-react-native'
 import { fetchLoginMessages } from 'edge-core-js'
 import React, { Component } from 'react'
-import { AsyncStorage, Platform, Text, TextInput } from 'react-native'
+import { AsyncStorage, Platform, Text, TextInput, View } from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
 import firebase from 'react-native-firebase'
 import RNFS from 'react-native-fs'
 import PushNotification from 'react-native-push-notification'
 import { Provider } from 'react-redux'
 import { sprintf } from 'sprintf-js'
+import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../env.json'
-import Main from './connectors/MainConnector'
 import * as Constants from './constants/indexConstants.js'
 import configureStore from './lib/configureStore'
 import s from './locales/strings.js'
@@ -219,11 +219,26 @@ BackgroundFetch.configure(
   }
 )
 
+class Kylan extends Component<{}> {
+  componentDidMount = () => {
+    SplashScreen.close({
+      animationType: SplashScreen.animationType.fade,
+      duration: 150,
+      delay: 100
+    })
+  }
+  render () {
+    return (
+      <View><Text>Kylan</Text></View>
+    )
+  }
+}
+
 export default class App extends Component<{}> {
   render () {
     return (
       <Provider store={store}>
-        <Main />
+        <Kylan />
       </Provider>
     )
   }
